@@ -13,7 +13,7 @@ int bioc_unsg(va_list arg, char s);
 int num_prnt(unsigned int num, int bs);
 int print_s(char *s);
 int hex_prnt(unsigned int n, char s);
-int reverse (char *s);
+int reverse(char *s);
 int rot13(char *s);
 int convert(char s, va_list varg);
 #endif /** PRINTF_FUNCTION_HEADER **/
