@@ -3,22 +3,17 @@
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <stddef.h>
 #include <unistd.h>
 
-#define UNUSED(x) (void)(x)
-#define SIZE_BUF 1024
-
-/** FLAGS **/
-#define NEG_FLG 1
-#define POS_FLG 2
-#define ZERO_FLG 4
-#define HASH_FLG 8
-#define SPACE_FLG 16
-
-/** SIZES **/
-#define LONG_SZ 2
-#define SHORT_SZ 1
-
-
+int _putchar(char c);
+int _printf(const char *format, ...);
+int prnt_stg(va_list varg, char c);
+int int_prnt(va_list arg);
+int bioc_unsg(va_list arg, char s);
+int num_prnt(unsigned int num, int bs);
+int print_s(char *s);
+int hex_prnt(unsigned int n, char s);
+int reverse (char *s);
+int rot13(char *s);
+int convert(char s, va_list varg);
 #endif /** PRINTF_FUNCTION_HEADER **/
