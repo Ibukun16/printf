@@ -22,7 +22,7 @@ int _printf(const char *format, ...)
 	{
 		if (format[i] != '%')
 		{
-			buff[buf_ixd++] = format[i];
+			buff[buf_idx++] = format[i];
 			if (buf_idx == array)
 				print_buffer(buff, &buff_idx);
 			p_chars++;
@@ -38,13 +38,13 @@ int _printf(const char *format, ...)
 					wdt, prec, siz);
 			if (printed == -1)
 				return (-1);
-			p_chars += printed;
+			print_chars += printed;
 		}
 	}
 	print_buffer(buff, &buff_idx);
 	va_end(varg);
 
-	return (p_chars);
+	return (print_chars);
 }
 		
 /**

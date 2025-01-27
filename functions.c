@@ -1,5 +1,6 @@
 #include "main.h"
-/********************** PRINT CHAR *************************/
+
+/*** PRINT CHAR ***/
 
 /**
  * print_char - A function that prints char
@@ -19,7 +20,7 @@ int print_char(va_list types, char buf[], int flgs, int wdt, int prec, int siz)
 }
 
 
-/************************* PRINT A STRING **********************/
+/*** PRINT A STRING ***/
 
 /**
  * print_string - A function that prints string
@@ -42,7 +43,7 @@ int print_string(va_list types, char buf[], int flgs, int wdt, int prec, int siz
 	UNUSED(wdt);
 	UNUSED(prec);
 	UNUSED(siz);
-	if (st == NULL)
+	if (!st)
 	{
 		st = "(null)";
 		if (prec >= 6)
@@ -52,18 +53,16 @@ int print_string(va_list types, char buf[], int flgs, int wdt, int prec, int siz
 		l++;
 	if (prec >= 0 && prec < l)
 		l = prec;
-	if (prec >= 0 && prec < l)
-		l = prec;
 	if (wdt > l)
 	{
 		if (flgs & F_MINUS)
 		{
-			write(1, &st[0],l);
+			write(1, &st[0], l);
 			for (n = wdt - l; n > 0; n--)
 				write(1, " ", 1);
 			return (wdt);
 		}
-		end 
+		else
 		{
 			for (n = wdt - l; n > 0; n--)
 				write(1, " ", 1);
@@ -74,11 +73,11 @@ int print_string(va_list types, char buf[], int flgs, int wdt, int prec, int siz
 	return (write(1, st, l));
 }
 
-/*************************** PRINT PERCENT SIGN (MODULUS) **************************/
+/*** PRINT PERCENT SIGN (MODULUS) ***/
 
 /**
  * print_percent - A function that prints modulus sign
- * @types: type of the arguments
+ * @types: The argument variable list
  * @buf: Buffer to handle print
  * @flgs: Determine the active flags
  * wdt: The width of the of the buf
@@ -99,7 +98,7 @@ int print_percent(va_list types, char buf[], int flgs, int wdt, int prec, int si
 	return (write(1, '%%', 1));
 }
 
-/************************* PRINT INT **********************************/
+/*** PRINT INT ***/
 
 /**
  * print_int - A function that prints integer
@@ -110,19 +109,19 @@ int print_percent(va_list types, char buf[], int flgs, int wdt, int prec, int si
  * @prec: The precision in specification
  * @siz: Size of the array
  *
- * Return: The number of charcarters from the string printed.
+ * Return: The number of characters from the string printed.
  */
 int print_int(va_list types, char buf[], int flgs, int wdt, int prec, int siz)
 {
-	int n = array - 2;
+	int n = BUFF_SIZE - 2;
 	int neg = 0;
-	long int list = varg(types, long int);
+	long int list = va_arg(types, long int);
 	unsigned long int no;
 
 	list = convert_size_num(list, siz);
-	if (n == 0)
+	if (list == 0)
 		buf[n--] = '0';
-	buf[array - 1] = '\0';
+	buf[BUFF_SIZE - 1] = '\0';
 	no = (unsigned long int)n;
 
 	if (list < 0)
@@ -134,15 +133,15 @@ int print_int(va_list types, char buf[], int flgs, int wdt, int prec, int siz)
 	while (no > 0)
 	{
 		buf[n--] = (no % 10) + '0';
-		no  /= 10;
+		no /= 10;
 	}
 
-	i++;
-	 return (write_num(neg, n, buf, flgs, wdt, prec, siz));
+	n++;
+	return (write_num(neg, n, buf, flgs, wdt, prec, siz));
 }
 
 
-/**************************** PRINT BINARY *******************************/
+/*** PRINT BINARY ***/
 
 /**
  * print_binary - A function that prints an unsigned integer
@@ -168,12 +167,12 @@ int print_binary(va_list types, char buf[], int flgs, int wdt, int prec, int siz
 	UNUSED(prec);
 	UNUSED(siz);
 
-	n = varg(types, unsigned int);
+	n = va_arg(types, unsigned int);
 	m = 2147483648; /* (2 ^ 31) */
 	a[0] = n / m;
-	for (e = 1; 3 < 32; e++)
+	for (e = 1; e < 32; e++)
 	{
-		m //= 2;
+		m /= 2;
 		a[e] = (n / m) % 2;
 	}
 	for (e  = 0, sum = 0, c = 0; i < 32; e++)

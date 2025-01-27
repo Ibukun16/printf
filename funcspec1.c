@@ -1,98 +1,150 @@
 #include "main.h"
 
+/*** PRINT UNSIGNED INT ***/
+
 /**
- * prnt_stg - A function that prints a string
- * @varg: Argument variable list
- * @s: The specifier
+ * print_unsigned - A function that prints unsigned integer
+ * @types: Argument variable list
+ * @buf: Buffer array that handles print
+ * @flgs: The flags identifier
+ * @wdt: The width identifier
+ * @prec: The precision identifier
+ * @siz: The size identifier
  *
- * Return: The number of characters
+ * Return: The number of unsigned characters
  */
-int prnt_stg(va_list varg, char s)
+int print_unsigned(va_lists types, char buf[], int flgs, int wdt, int prec, int siz)
 {
-	int c = 0;
-	char *f = va_arg(varg, char *);
+	int c = BUFF_SIZE - 2;
+	unsigned long int num = va_arg(types, unsigned long int);
 
-	if (!f)
-		f = "(null)";
-	if (s == 's')
+	no = convert_size_unsigned(no, siz)
+
+	if (no == 0)
+		buf[c--] = '0';
+
+	buf[BUFF_SIZE - 1] = '\0';
+	while (no > 0)
 	{
-		while (*f)
-		{
-			c += _putchar(*f);
-			f++;
-		}
+		buf[c--] = (no % 10) + '0';
+		no /= 10;
 	}
-	else if (s == 'S')
-		c += print_s(f);
-	else if (s == 'r')
-		c += reverse(f);
-	else if (s == 'R')
-		c += rot13(f);
-
-	return (c);
+	c++;
+	return (write_unsigned(0, c, buf, flgs, wdt, prec, siz));
 }
 
+/*** PRINT UNSIGNED OCTADECIMAL NUMBER ***/
 /**
- * int_prnt - A function that prints integer
- * @arg: The variable argument list
+ * print_octal - A function that prints unsigned octdecimal number
+ * @types: The variable argument list
+ * @buf: The buffer array to handle the print
+ * @flgs: The flags identifier
+ * @wdt: The width specifier
+ * @prec: The precision identifier
+ * @siz: The size specifier
  *
  * Return: The number of characters printed
  */
-int int_prnt(va_list arg)
+int print_octal(va_list types, char buf[], int flgs, int wdt, int prec, int siz)
 {
-	int c = 0;
-	int f1 = va_arg(arg, int);
+	int c = BUFF_SIZE - 2;
+	unsigned long int n = va_arg(types, unsigned long int);
+	unsigned long int init = n;
 
-	if (f1 < 0)
+	UNUSED(wdt);
+
+	n = convert_size_unsigned(no, siz);
+	
+	if (n == 0)
+		buf[c--] = '0';
+	buf[BUFF_SIZE - 1] = '\0';
+	while (n > 0)
 	{
-		_putchar('-');
-		c++;
-		f1 *= -1;
+		buf[c--] = (n % 8) + '0';
+		n /= 8;
 	}
+	if (flgs & F_HASH && init != 0)
+		buf[c--] = '0';
+	c++;
 
-	c += num_prnt(f1, 10);
-	return (c);
+	return (write_unsigned(0, c, buf, flgs, wdt, prec, siz));
 }
-
+/*** PRINT LOWER OR UPPER HEXADECIMAL NUMBER ***/
 /**
- * bioc_unsg - A function that prints binary, octadecimal and unsigned integer
- * @arg: The variables argument list
- * @s: The specifier
+ * print_hex - A function that prints hexadecimal number in lower or uopper letters
+ * @types: The variables argument list
+ * @buf: The buffer array that handles the print function
+ * @flgs: The flags identifier
+ * @flg_ch: The identifier for the flag characters.
+ * @wdt: The Identifier for the width.
+ * @prec: The precision identifier
+ * @siz: The identifier of the size 
  *
  * Return: The number of characters printed.
  */
-int bioc_unsg(va_list arg, char s)
+int print_hex(val_list types, char map_to[], char buf[], int flgs, char flg_ch,
+	      int wdt, int prec, int siz)
 {
-	int c = 0;
-	unsigned int i = va_arg(arg, unsigned int);
+	int c = BUFF_SIZE - 2;
+	unsigned long int n = va_arg(types, unsigned long int);
+	unsigned long int init = no;
 
-	if (s == 'b')
-		c += num_prnt(i, 2);
-	else if (s == 'u')
-		c += num_prnt(i, 10);
-	else if (s == 'o')
-		c += num_prnt(i, 8);
-	else if (s == 'x' || s == 'X')
-		c += hex_prnt(i, s);
-	return (c);
+	UNUSED(wdt);
+
+	n = convert_size_unsigned(n, siz);
+	if (n == 0)
+		buf[c--] = '0';
+	buf[BUFF_SIZE - 1] = '\0';
+	while (n > 0)
+	{
+		buf[c--] = map_to[n % 16];
+		n /= 16;
+	}
+
+	if (flgs & F_HASH && init_n != 0)
+	{
+		buf[c--] = flg_ch;
+		buf[c--] = '0';
+	}
+	c++;
+
+	return (write_unsigned(0, c, buf, flgs, wdt, prec, siz));
+
+
+/*** PRINT UNSIGNED HEXADECIMAL NUMBER ***/
+/**
+ * print_hexadecimal - A function that prints hexadecimal numbers
+ * @types: The variables argument list
+ * @buf: The buffer array that handles the print function
+ * @flgs: The identifier of active flags
+ * @wdt: The width identifier
+ * @prec: The precision identifier
+ * @siz: The size identifier
+ *
+ * Return: The number of characters printed.
+ */
+int print_hexadecimal(va_list types, char buf[], int flgs, int wdt, int prec, int siz)
+{
+	return (print_hex(types, "0123456789abcdef", buf, flgs, 'x',
+		wdt, prec, siz));
 }
 
+/*** PRINT UNSIGNED UPPER HEXADECIMAL NUMBER ***/
 /**
- * num_prnt - A function that prints a number
- * @num : The number to print
- * @bs: The base to print the number
+ * print_upper_hex - A function that prints unsigned hexadecimal number.
+ * @types: The variable argument list.
+ * @buf: Buffer array that handle the print.
+ * @flgs: The flags identifier.
+ * @wdt: The width identifier.
+ * @prec: The precision identifier
+ * @siz: The identifier for the size of the arguments
  *
  * Return: The number of characters printed
  */
-int num_prnt(unsigned int num, int bs)
+int print_upper_hex(va_list types, char buf[], int flgs, int wdt, prec, siz)
 {
-	int b, c = 0;
-
-	b = num / bs;
-	if (b > 0)
-		c += num_prnt(b, bs);
-	c += _putchar((num % bs) + '0');
-	return (c);
+	return (print_hex(types, "0123456789ABCDEF", buf, flgs, 'X',
+		wdt, prec, siz));
 }
 
 /**
