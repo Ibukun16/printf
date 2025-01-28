@@ -65,8 +65,8 @@ typedef struct fmt fmt_t;
 
 int _putchar(char c);
 int _printf(const char *format, ...);
-int handle_print(const char *fmt, int *i, va_list list, char buf[], int flgs,
-		int wdt, int prec, int siz);
+int print_handler(const char *fmt, int *i, va_list list, char buf[], int flgs,
+		 int wdt, int prec, int siz);
 
 
 /***************** FUNCTIONS ********************/
@@ -80,17 +80,17 @@ int print_string(va_list types, char buf[], int flgs, int wdt, int prec, int siz
 /*** Functions to print numbers ***/
 int print_int(va_list types, char buf[], int flgs, int wdt, int prec, int siz);
 int print_binary(va_list types, char buf[], int flgs, int wdt, int prec, int siz);
-int print_unsigned(va_lists types, char buf[], int flgs, int wdt, int prec, int siz);
-int print octal(va_list types, char buf[], int flgs, int wdt, int prec, int siz);
-int print_hexal(va_list types, char buffer[], int flgs, int wdt, int prec, int siz);
-int print_hex_upper(va_list types, char buf[], int flgs, int wdt, int prec, int siz);
-int print_hexa(va_list types, char map_to[], char buf[], int flgs, char flg_ch, int prec, int siz);
+int print_unsgned(va_list types, char buf[], int flgs, int wdt, int prec, int siz);
+int print_octal(va_list types, char buf[], int flgs, int wdt, int prec, int siz);
+int print_hexadecimal(va_list types, char buffer[], int flgs, int wdt, int prec, int siz);
+int print_upper_hex(va_list types, char buf[], int flgs, int wdt, int prec, int siz);
+int print_hex(va_list types, char map_to[], char buf[], int flgs, char flg_ch, int prec, int siz);
 
 /*** Function to print non printable characters ***/
 int print_non_printable(va_list types, char buf[], int flgs, int wdt, int prec, int siz);
 
 /*** Function to print memory address ***/
-int print_pointer(va_list types, char buf[], int flgs, int wdt, int prec, int siz);
+int pointer(va_list types, char buf[], int flgs, int wdt, int prec, int siz);
 
 /*** Function to handle other specifiers ***/
 int get_flags(const char *fmt, int *f);
@@ -106,17 +106,17 @@ int rot13_string(va_list types, char buf[], int flgs, int wdt, int prec, int siz
 
 /*** width handler ***/
 int handle_write_char(char c, char buf[], int flgs, int wdt, int prec, int siz);
-int write_numb(int is_positive, int idx, char buf[], int flgs, int wdt, int prec, int siz);
+int write_numb(int neg, int idx, char buf[], int flgs, int wdt, int prec, int siz);
 int write_num(int idx, char buf[], int flgs, int wdt, int prec, int len, char pad, char xtra_ch);
 int prnt_pointer(char buf[], int idx, int len, int wdt, int flgs, char pad, char xtra_ch, int pad_start);
-int write_unsgned(int is_negative, int idx, char buf[], int flgs, int wdt, int prec, int siz);
+int write_unsgned(int neg, int idx, char buf[], int flgs, int wdt, int prec, int siz);
 
 
 /*** UTILS ***/
 int is_printable(char);
-int append_hexa_code(char, char[], int);
+int append_hex_code(char, char[], int);
 int is_digit(char);
 
 long int convert_size_num(long int num, int siz);
-long int convert_size_unsgned(unsigned long int num, int size);
+long int convert_size_unsigned(unsigned long int num, int size);
 #endif /** PRINTF_HEADER **/

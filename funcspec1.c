@@ -13,24 +13,27 @@
  *
  * Return: The number of unsigned characters
  */
-int print_unsigned(va_lists types, char buf[], int flgs, int wdt, int prec, int siz)
+int print_unsigned(va_list types, char buf[], int flgs, int wdt,
+		int prec, int siz)
 {
 	int c = BUFF_SIZE - 2;
 	unsigned long int num = va_arg(types, unsigned long int);
 
-	no = convert_size_unsigned(no, siz)
+	num = convert_size_unsgned(num, siz)
 
-	if (no == 0)
+	if (num == 0)
 		buf[c--] = '0';
 
-	buf[BUFF_SIZE - 1] = '\0';
-	while (no > 0)
+	buf[BUFF_SIZE - 1] = '\0
+		';
+	while (num > 0)
 	{
-		buf[c--] = (no % 10) + '0';
-		no /= 10;
+		buf[c--] = (num % 10) + '0';
+		num /= 10;
 	}
 	c++;
-	return (write_unsigned(0, c, buf, flgs, wdt, prec, siz));
+
+	return (write_unsgned(0, c, buf, flgs, wdt, prec, siz));
 }
 
 /*** PRINT UNSIGNED OCTADECIMAL NUMBER ***/
@@ -45,7 +48,8 @@ int print_unsigned(va_lists types, char buf[], int flgs, int wdt, int prec, int 
  *
  * Return: The number of characters printed
  */
-int print_octal(va_list types, char buf[], int flgs, int wdt, int prec, int siz)
+int print_octal(va_list types, char buf[], int flgs, int wdt,
+		int prec, int siz)
 {
 	int c = BUFF_SIZE - 2;
 	unsigned long int n = va_arg(types, unsigned long int);
@@ -53,8 +57,8 @@ int print_octal(va_list types, char buf[], int flgs, int wdt, int prec, int siz)
 
 	UNUSED(wdt);
 
-	n = convert_size_unsigned(no, siz);
-	
+	n = convert_size_unsgned(n, siz);
+
 	if (n == 0)
 		buf[c--] = '0';
 	buf[BUFF_SIZE - 1] = '\0';
@@ -67,37 +71,39 @@ int print_octal(va_list types, char buf[], int flgs, int wdt, int prec, int siz)
 		buf[c--] = '0';
 	c++;
 
-	return (write_unsigned(0, c, buf, flgs, wdt, prec, siz));
+	return (write_unsgned(0, c, buf, flgs, wdt, prec, siz));
 }
 /*** PRINT LOWER OR UPPER HEXADECIMAL NUMBER ***/
 /**
- * print_hex - A function that prints hexadecimal number in lower or uopper letters
+ * print_hex - A function that prints hexadecimal number in lower or
+ *		upper letters.
  * @types: The variables argument list
  * @buf: The buffer array that handles the print function
- * @flgs: The flags identifier
+ * @flgs: The flags identifier.
  * @flg_ch: The identifier for the flag characters.
+ * @map: Map the buf to the value
  * @wdt: The Identifier for the width.
- * @prec: The precision identifier
- * @siz: The identifier of the size 
+ * @prec: The precision identifier.
+ * @siz: The identifier of the size.
  *
  * Return: The number of characters printed.
  */
-int print_hex(val_list types, char map_to[], char buf[], int flgs, char flg_ch,
-	      int wdt, int prec, int siz)
+int print_hex(val_list types, char map[], char buf[], int flgs,
+		char flg_ch, int wdt, int prec, int siz)
 {
 	int c = BUFF_SIZE - 2;
 	unsigned long int n = va_arg(types, unsigned long int);
-	unsigned long int init = no;
+	unsigned long int init = n;
 
 	UNUSED(wdt);
 
-	n = convert_size_unsigned(n, siz);
+	n = convert_size_unsgned(n, siz);
 	if (n == 0)
 		buf[c--] = '0';
 	buf[BUFF_SIZE - 1] = '\0';
 	while (n > 0)
 	{
-		buf[c--] = map_to[n % 16];
+		buf[c--] = map[n % 16];
 		n /= 16;
 	}
 
@@ -108,8 +114,8 @@ int print_hex(val_list types, char map_to[], char buf[], int flgs, char flg_ch,
 	}
 	c++;
 
-	return (write_unsigned(0, c, buf, flgs, wdt, prec, siz));
-
+	return (write_unsgned(0, c, buf, flgs, wdt, prec, siz));
+}
 
 /*** PRINT UNSIGNED HEXADECIMAL NUMBER ***/
 /**
@@ -123,7 +129,8 @@ int print_hex(val_list types, char map_to[], char buf[], int flgs, char flg_ch,
  *
  * Return: The number of characters printed.
  */
-int print_hexadecimal(va_list types, char buf[], int flgs, int wdt, int prec, int siz)
+int print_hexadecimal(va_list types, char buf[], int flgs, int wdt,
+		int prec, int siz)
 {
 	return (print_hex(types, "0123456789abcdef", buf, flgs, 'x',
 		wdt, prec, siz));
@@ -145,36 +152,4 @@ int print_upper_hex(va_list types, char buf[], int flgs, int wdt, prec, siz)
 {
 	return (print_hex(types, "0123456789ABCDEF", buf, flgs, 'X',
 		wdt, prec, siz));
-}
-
-/**
- * print_s - A function that print string and non printable in haxadecimal.
- * @s: The string to be printed
- *
- * Return: The number of characters printed
- */
-int print_s(char *s)
-{
-	int c = 0, asci;
-
-	while (*s)
-	{
-		if (*s < 32 || *s >= 127)
-		{
-			c += _putchar('\\');
-			c += _putchar('x');
-
-			asci = (int)*s;
-			c += _putchar((asci / 16) + '0');
-
-			if (asci % 16 > 9)
-				c += _putchar(((asci % 16) - 10) + 'A');
-			else
-				c += _putchar((asci % 16) + '0');
-		}
-		else
-			c += _putchar(*s);
-		s++;
-	}
-	return (c);
 }

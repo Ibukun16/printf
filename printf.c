@@ -46,7 +46,7 @@ int _printf(const char *format, ...)
 
 	return (print_chars);
 }
-		
+
 /**
  * print_buffer - Prints the contents of the buffer if it exists
  *

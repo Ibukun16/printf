@@ -1,78 +1,182 @@
 #include "main.h"
+
+/*** PRINT POINTER ***/
 /**
- * hex_prnt - A function that prints hexadecimal
- * @n: The number to print
- * @s: The specifier before the number.
+ * pointer - A function that prints a pointer variable
+ * @types: The argument list
+ * @buf: Buffer array to handle print
+ * @flgs: The flags indentifier
+ * @wdt: The width specicier
+ * @prec: Precision specifier
+ * @siz: The size specifier
  *
  * Return: The number of characters printed
  */
-int hex_prnt(unsigned int n, char s)
+int pointer(va_list types, char buf[], int flgs, int wdt, int prec, int siz)
 {
-	int c = 0;
-	unsigned int i = n % 16;
+	char xtr_c = 0, padd = ' ';
+	int idx = BUFF_SIZE - 2, l = 2, padd_start = 1; /* length = 2 for 'ox' */
+	unsigned long num_addrs;
+	char map_to[] = "0123456789abcdef";
+	void *addrs = va_arg(types, void *);
 
-	if (n / 16 > 0)
-		c += hex_prnt(n / 16, c);
-	if (i > 9)
+	UNUSED(wdt);
+	UNUSED(siz);
+	UNUSED(prec);
+
+	if (addrs == NULL)
+		return (write(1, "(nil)", 5));
+	buf[BUFF_SIZE - 1] = '\0';
+
+	while (num_addrs > 0)
 	{
-		if (s == 'x')
-			c += _putchar((i - 10) + 'a');
-		else
-			c += _putchar((i - 10) + 'A');
+		buf[idx--] = map_to[num_addrs % 16];
+		num_addrs /= 16;
+		l++;
 	}
-	else
-		c += _putchar((n % 16) + '0');
-	return (c);
+	if ((flgs & F_ZERO) && !(flgs & F_MINUS))
+		padd = '0';
+	if (flgs & F_PLUS)
+		xtr_c = '+', l++;
+	else if (flgs & F_SPACE)
+		xtr_c = ' ', l++;
+
+	idx++;
+	/* return (write(1, &buf[c], BUFF_SIZE - c - 1)); */
+	return (write_pointer(buf, idx, l, wdt, flgs, padd, xtr_c, padd_start));
 }
 
+/*** PRINT NON PRINTABLE ***/
 /**
- * reverse - A function that prints string in reverse
- * @s: The string to print
+ * print_non_printable - Function that prints ascii codes in hexadecimal of
+ *			 of non printable characters.
+ * @types: Argument list variables
+ * @buf: Buffer array that handles that print function
+ * @flgs: The flags idenfier
+ * @wdt: The width identifier
+ * @prec: The precision identifier
+ * @siz: The size specifier
  *
  * Return: The number of characters printed
  */
-int reverse(char *s)
+int print_non_printable(va_list types, char buf[], int flgs, int wdt,
+			int prec, int siz)
 {
 	int l = 0, c = 0;
+	char *st = va_arg(types, char *);
 
-	while (s[l])
-		l++;
-	for (; l >= 1; l--)
-		c += _putchar(s[l - 1]);
+	UNUSED(flgs);
+	UNUSED(wdt);
+	UNUSED(prec);
+	UNUSED(siz);
 
+	if (st == NULL)
+		return (write(1, "(null)", 6));
+
+	while (st[l] != '\0')
+	{
+		if (is_printable(st[l]))
+			buf[l + c] = st[l];
+		else
+			c += append_hex_code(st[l], buf, l + c);
+		c++;
+	}
+	buf[l + c] = '\0';
+
+	return (write(1, buf, l + c));
+}
+
+/*** PRINT REVERSE ***/
+/**
+ * print_reverse - Function that prints string in reverse.
+ * @types: List of the argument variable
+ * @buf: Array that handles print function
+ * @flgs:  Active flgs identifier
+ * @wdt: Width specifier
+ * @prec: Precision specifier
+ * @siz: Size specifier
+ *
+ * Return: Number of characters printed
+ */
+int print_reverse(va_list types, char buf[], int flgs, int wdt,
+		int prec, int siz)
+{
+	char *st;
+	int n, c = 0;
+
+	UNUSED(buf);
+	UNUSED(flgs);
+	UNUSED(wdt);
+	UNUSED(siz);
+
+	st = va_arg(types, char *);
+	if (str == null)
+	{
+		UNUSED(prec);
+		st = "(Null)");
+	}
+	for (n = 0; st[n]; n++)
+		;
+	for (n = n - 1; n >= 0; n--)
+	{
+		char b = st[n];
+
+		write(1, &b, 1);
+		c++;
+	}
 	return (c);
 }
 
+
+/*** PRINT A STRING IN ROTS ***/
 /**
- * rot13 - A function that encode a string using rot13
- * @s: The string to be encoded
+ * rot13_string - A function that encode and print a string in rot13
+ * @types: Argument list variable
+ * @buf: Buffer array that handles print function
+ * @flgs: The active flags identifier
+ * @wdt: The width specifier
+ * @prec: Precision identifier
+ * @siz: The size specifier
  *
  * Return: The encoded string
  */
-int rot13(char *s)
+int rot13_string(va_list types, char buf[], int flgs,
+		int wdt, int prec, int siz)
 {
-	int i = 0, c = 0;
+	char x;
+	char *st;
+	unsigned int q, w;
+	int c = 0;
+	char in[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+	char out[] = "NOPQRSTUVWYZABCDEFGHIJLMnopqrstuvwxyzabcdefghijklm";
 
-	while (s[i])
+	st = va_arg(types, char *);
+	UNUSED(buf);
+	UNUSED(flgs);
+	UNUSED(wdt);
+	UNUSED(prec);
+	UNUSED(siz);
+
+
+	if (st == NULL)
+		st = "(AHYY)";
+	for (q = 0; st[q]; q++)
 	{
-		while (
-				(s[i] >= 'a' && s[i] <= 'z') ||
-				(s[i] >= 'A' && s[i] <= 'Z')
-		      )
+		for (w = 0; in[w]; w++)
 		{
-			if (
-					(s[i] >= 'n' && s[i] <= 'z') ||
-					(s[i] >= 'N' && s[i] <= 'Z')
-			   )
-				c += _putchar(s[i] - 13);
-			else
-				c += _putchar(s[i] + 13);
-			i++;
+			if (in[w] == st[q])
+			{
+				x = out[w];
+				write(1, &x, 1);
+				c++;
+				break;
+			}
 		}
-		if (s[i])
+		if (!in[w])
 		{
-			c += _putchar(s[i]);
-			i++;
+			x = str[q];
+			write(1, &x, 1);
+			c++;
 		}
 	}
 	return (c);

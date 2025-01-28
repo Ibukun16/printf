@@ -7,7 +7,7 @@
  * @types: type of the arguments
  * @buf: Buffer to handle print
  * @flgs: Determine the active flags
- * wdt: The width of the of the buf
+ * @wdt: The width of the of the buf
  * @prec: The precision in specification
  * @siz: Size of the array
  *
@@ -16,7 +16,8 @@
 int print_char(va_list types, char buf[], int flgs, int wdt, int prec, int siz)
 {
 	char c = va_arg(types, int);
-	return(handle_write_char(c, buf, flgs, wdt, prec, siz));
+
+	return (handle_write_char(c, buf, flgs, wdt, prec, siz));
 }
 
 
@@ -27,13 +28,14 @@ int print_char(va_list types, char buf[], int flgs, int wdt, int prec, int siz)
  * @types: type of the arguments
  * @buf: Buffer to handle print
  * @flgs: Determine the active flags
- * wdt: The width of the of the buf
+ * @wdt: The width of the of the buf
  * @prec: The precision in specification
  * @siz: Size of the array
  *
  * Return: The number of charcarters from the string printed.
  */
-int print_string(va_list types, char buf[], int flgs, int wdt, int prec, int siz)
+int print_string(va_list types, char buf[], int flgs, int wdt,
+		 int prec, int siz)
 {
 	int l = 0, n;
 	char *st = va_arg(types, char *);
@@ -80,13 +82,14 @@ int print_string(va_list types, char buf[], int flgs, int wdt, int prec, int siz
  * @types: The argument variable list
  * @buf: Buffer to handle print
  * @flgs: Determine the active flags
- * wdt: The width of the of the buf
+ * @wdt: The width of the of the buf
  * @prec: The precision in specification
  * @siz: Size of the array
  *
  * Return: The number of charcarters from the string printed.
  */
-int print_percent(va_list types, char buf[], int flgs, int wdt, int prec, int siz)
+int print_percent(va_list types, char buf[], int flgs, int wdt,
+		int prec, int siz)
 {
 	UNUSED(buf);
 	UNUSED(types);
@@ -105,7 +108,7 @@ int print_percent(va_list types, char buf[], int flgs, int wdt, int prec, int si
  * @types: type of the arguments
  * @buf: Buffer to handle print
  * @flgs: Determine the active flags
- * wdt: The width of the of the buf
+ * @wdt: The width of the of the buf
  * @prec: The precision in specification
  * @siz: Size of the array
  *
@@ -148,13 +151,14 @@ int print_int(va_list types, char buf[], int flgs, int wdt, int prec, int siz)
  * @types: type of the arguments
  * @buf: Buffer to handle print
  * @flgs: Determine the active flags
- * wdt: The width of the of the buf
+ * @wdt: The width of the of the buf
  * @prec: The precision in specification
  * @siz: Size of the array
  *
  * Return: The number of charcarters from the string printed.
  */
-int print_binary(va_list types, char buf[], int flgs, int wdt, int prec, int siz)
+int print_binary(va_list types, char buf[], int flgs, int wdt,
+		int prec, int siz)
 {
 	unsigned int n, m, e, sum;
 	unsigned int a[32];
