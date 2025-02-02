@@ -15,19 +15,19 @@
  * Return: 1 or 2;
  */
 int print_handler(const char *fmt, int *idx, va_list ags, char buf[],
-		int flgs, int flgs, int wdt, int prec, int siz)
+		int flgs, int wdt, int prec, int siz)
 {
 	int n, len = 0, chars_prt = -1;
 	fmt_t fmt_types[] = {
 		{'c', print_char}, {'s', print_string}, {'%', print_percent},
 		{'i', print_int}, {'d', print_int}, {'b', print_binary},
-		{'u', print_unsigned}, {'o', print_octal}, {'x', print_hexadecimal},
-		{'X', print_upper_hex}, {'p', print_pointer}, {'S', print_non_printable},
-		{'r', print_reverse}, {'R', print_rot13string}, {'\0', NULL}
-	}
-	for (n = 0, fmt_types[n].fmt != '\0'; n++)
+		{'u', print_unsgned}, {'o', print_octal}, {'x', print_hexadecimal},
+		{'X', print_upper_hex}, {'p', pointer}, {'S', print_non_printable},
+		{'r', print_reverse}, {'R', rot13_string}, {'\0', NULL}
+	};
+	for (n = 0; fmt_types[n].fmt != '\0'; n++)
 		if (fmt[*idx] == fmt_types[n].fmt)
-			return (fmt_types[n].fn(ags, buf, flgs, wdt, prec, siz));
+			return (fmt_types[n].func(ags, buf, flgs, wdt, prec, siz));
 
 	if (fmt_types[n].fmt == '\0')
 	{

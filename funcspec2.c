@@ -17,7 +17,7 @@ int pointer(va_list types, char buf[], int flgs, int wdt, int prec, int siz)
 	char xtr_c = 0, padd = ' ';
 	int idx = BUFF_SIZE - 2, l = 2, padd_start = 1; /* length = 2 for 'ox' */
 	unsigned long num_addrs;
-	char map_to[] = "0123456789abcdef";
+	char map[] = "0123456789abcdef";
 	void *addrs = va_arg(types, void *);
 
 	UNUSED(wdt);
@@ -30,7 +30,7 @@ int pointer(va_list types, char buf[], int flgs, int wdt, int prec, int siz)
 
 	while (num_addrs > 0)
 	{
-		buf[idx--] = map_to[num_addrs % 16];
+		buf[idx--] = map[num_addrs % 16];
 		num_addrs /= 16;
 		l++;
 	}
@@ -43,7 +43,7 @@ int pointer(va_list types, char buf[], int flgs, int wdt, int prec, int siz)
 
 	idx++;
 	/* return (write(1, &buf[c], BUFF_SIZE - c - 1)); */
-	return (write_pointer(buf, idx, l, wdt, flgs, padd, xtr_c, padd_start));
+	return (prnt_pointer(buf, idx, l, wdt, flgs, padd, xtr_c, padd_start));
 }
 
 /*** PRINT NON PRINTABLE ***/
@@ -110,10 +110,11 @@ int print_reverse(va_list types, char buf[], int flgs, int wdt,
 	UNUSED(siz);
 
 	st = va_arg(types, char *);
-	if (str == null)
+	if (st == NULL)
 	{
 		UNUSED(prec);
-		st = "(Null)");
+
+		st = ")Null(";
 	}
 	for (n = 0; st[n]; n++)
 		;
@@ -174,7 +175,7 @@ int rot13_string(va_list types, char buf[], int flgs,
 		}
 		if (!in[w])
 		{
-			x = str[q];
+			x = st[q];
 			write(1, &x, 1);
 			c++;
 		}

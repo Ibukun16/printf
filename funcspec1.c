@@ -13,19 +13,18 @@
  *
  * Return: The number of unsigned characters
  */
-int print_unsigned(va_list types, char buf[], int flgs, int wdt,
+int print_unsgned(va_list types, char buf[], int flgs, int wdt,
 		int prec, int siz)
 {
 	int c = BUFF_SIZE - 2;
 	unsigned long int num = va_arg(types, unsigned long int);
 
-	num = convert_size_unsgned(num, siz)
+	num = convert_size_unsgned(num, siz);
 
 	if (num == 0)
 		buf[c--] = '0';
 
-	buf[BUFF_SIZE - 1] = '\0
-		';
+	buf[BUFF_SIZE - 1] = '\0';
 	while (num > 0)
 	{
 		buf[c--] = (num % 10) + '0';
@@ -73,6 +72,7 @@ int print_octal(va_list types, char buf[], int flgs, int wdt,
 
 	return (write_unsgned(0, c, buf, flgs, wdt, prec, siz));
 }
+
 /*** PRINT LOWER OR UPPER HEXADECIMAL NUMBER ***/
 /**
  * print_hex - A function that prints hexadecimal number in lower or
@@ -85,10 +85,10 @@ int print_octal(va_list types, char buf[], int flgs, int wdt,
  * @wdt: The Identifier for the width.
  * @prec: The precision identifier.
  * @siz: The identifier of the size.
- *
+ 
  * Return: The number of characters printed.
  */
-int print_hex(val_list types, char map[], char buf[], int flgs,
+int print_hex(va_list types, char map[], char buf[], int flgs,
 		char flg_ch, int wdt, int prec, int siz)
 {
 	int c = BUFF_SIZE - 2;
@@ -107,7 +107,7 @@ int print_hex(val_list types, char map[], char buf[], int flgs,
 		n /= 16;
 	}
 
-	if (flgs & F_HASH && init_n != 0)
+	if (flgs & F_HASH && init != 0)
 	{
 		buf[c--] = flg_ch;
 		buf[c--] = '0';
@@ -132,7 +132,7 @@ int print_hex(val_list types, char map[], char buf[], int flgs,
 int print_hexadecimal(va_list types, char buf[], int flgs, int wdt,
 		int prec, int siz)
 {
-	return (print_hex(types, "0123456789abcdef", buf, flgs, 'x',
+	return (print_hex(types, "0123456789abcdef", buf, flgs, 'X',
 		wdt, prec, siz));
 }
 
@@ -148,7 +148,7 @@ int print_hexadecimal(va_list types, char buf[], int flgs, int wdt,
  *
  * Return: The number of characters printed
  */
-int print_upper_hex(va_list types, char buf[], int flgs, int wdt, prec, siz)
+int print_upper_hex(va_list types, char buf[], int flgs, int wdt, int prec, int siz)
 {
 	return (print_hex(types, "0123456789ABCDEF", buf, flgs, 'X',
 		wdt, prec, siz));

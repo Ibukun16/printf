@@ -91,14 +91,13 @@ int print_string(va_list types, char buf[], int flgs, int wdt,
 int print_percent(va_list types, char buf[], int flgs, int wdt,
 		int prec, int siz)
 {
-	UNUSED(buf);
 	UNUSED(types);
+	UNUSED(buf);
 	UNUSED(flgs);
 	UNUSED(wdt);
 	UNUSED(siz);
 	UNUSED(prec);
-
-	return (write(1, '%%', 1));
+	return (write(1, "%%", 1));
 }
 
 /*** PRINT INT ***/
@@ -119,28 +118,30 @@ int print_int(va_list types, char buf[], int flgs, int wdt, int prec, int siz)
 	int n = BUFF_SIZE - 2;
 	int neg = 0;
 	long int list = va_arg(types, long int);
-	unsigned long int no;
+	unsigned long int num;
 
 	list = convert_size_num(list, siz);
+
 	if (list == 0)
 		buf[n--] = '0';
+
 	buf[BUFF_SIZE - 1] = '\0';
-	no = (unsigned long int)n;
+	num = (unsigned long int)list;
 
 	if (list < 0)
 	{
-		no =  (unsigned long int)((-1) * list);
+		num =  (unsigned long int)(-list);
 		neg = 1;
 	}
 
-	while (no > 0)
+	while (num > 0)
 	{
-		buf[n--] = (no % 10) + '0';
-		no /= 10;
+		buf[n--] = (num % 10) + '0';
+		num /= 10;
 	}
 
 	n++;
-	return (write_num(neg, n, buf, flgs, wdt, prec, siz));
+	return (write_numb(neg, n, buf, flgs, wdt, prec, siz));
 }
 
 
@@ -164,7 +165,6 @@ int print_binary(va_list types, char buf[], int flgs, int wdt,
 	unsigned int a[32];
 	int c;
 
-	UNUSED(types);
 	UNUSED(buf);
 	UNUSED(flgs);
 	UNUSED(wdt);
@@ -179,14 +179,14 @@ int print_binary(va_list types, char buf[], int flgs, int wdt,
 		m /= 2;
 		a[e] = (n / m) % 2;
 	}
-	for (e  = 0, sum = 0, c = 0; i < 32; e++)
+	for (e  = 0, sum = 0, c = 0; e < 32; e++)
 	{
 		sum += a[e];
 		if (sum || e == 31)
 		{
-			char z = '0' + a[e];
+			char s = '0' + a[e];
 
-			write(1, &z, 1);
+			write(1, &s, 1);
 			c++;
 		}
 

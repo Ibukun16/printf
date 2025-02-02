@@ -75,7 +75,7 @@ int write_numb(int neg, int idx, char buf[], int flgs,
 		xtra_ch = ' ';
 
 	return (write_num(idx, buf, flgs, wdt, prec, len, padd, xtra_ch));
-*}
+}
 
 /**
  * write_num - Function that write a number using a buffer
@@ -126,7 +126,7 @@ int write_num(int idx, char buf[], int flgs, int wdt, int prec, int len,
 	}
 	if (xtra_ch)
 		buf[--idx] = xtra_ch;
-	return (write(1, &buffer[idx], len));
+	return (write(1, &buf[idx], len));
 }
 
 /**
@@ -141,7 +141,7 @@ int write_num(int idx, char buf[], int flgs, int wdt, int prec, int len,
  *
  * Return: Number of written characters
  */
-int write_unsigned(int neg, int idx, char buf[], int flgs,
+int write_unsgned(int neg, int idx, char buf[], int flgs,
 		int wdt, int prec, int siz)
 {
 	/* The number is stored at the tight of the buffer and starts at position i */
@@ -151,10 +151,10 @@ int write_unsigned(int neg, int idx, char buf[], int flgs,
 	UNUSED(neg);
 	UNUSED(siz);
 
-	if (precision == 0 && idx == BUFF_SIZE - 2 && buf[idx] == '0')
+	if (prec == 0 && idx == BUFF_SIZE - 2 && buf[idx] == '0')
 		return (0); /* printf(".0d", 0) no character is printed */
 
-	if (precision > 0 && precision < len)
+	if (prec > 0 && prec < len)
 		padd = ' ';
 
 	while (prec > len)

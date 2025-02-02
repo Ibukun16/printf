@@ -84,7 +84,8 @@ int print_unsgned(va_list types, char buf[], int flgs, int wdt, int prec, int si
 int print_octal(va_list types, char buf[], int flgs, int wdt, int prec, int siz);
 int print_hexadecimal(va_list types, char buffer[], int flgs, int wdt, int prec, int siz);
 int print_upper_hex(va_list types, char buf[], int flgs, int wdt, int prec, int siz);
-int print_hex(va_list types, char map_to[], char buf[], int flgs, char flg_ch, int prec, int siz);
+int print_hex(va_list types, char map[], char buf[], int flgs,
+		char flg_ch, int wdt, int prec, int siz);
 
 /*** Function to print non printable characters ***/
 int print_non_printable(va_list types, char buf[], int flgs, int wdt, int prec, int siz);
@@ -118,5 +119,5 @@ int append_hex_code(char, char[], int);
 int is_digit(char);
 
 long int convert_size_num(long int num, int siz);
-long int convert_size_unsigned(unsigned long int num, int size);
+long int convert_size_unsgned(unsigned long int num, int siz);
 #endif /** PRINTF_HEADER **/

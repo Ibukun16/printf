@@ -8,7 +8,7 @@
  *
  * Return: width.
  */
-int get_width(const char *fmt, int *list, va_list list)
+int get_width(const char *fmt, int *list, va_list varg)
 {
 	int cur;
 	int wdt = 0;
@@ -23,12 +23,12 @@ int get_width(const char *fmt, int *list, va_list list)
 		else if (fmt[cur] == '*')
 		{
 			cur++;
-			wdt = va_arg(list, int);
+			wdt = va_arg(varg, int);
 			break;
 		}
 		else
 			break;
 	}
-	*c = cur - 1;
+	*list = cur - 1;
 	return (wdt);
 }
