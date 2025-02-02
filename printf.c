@@ -10,14 +10,16 @@ void print_buffer(char buffer[], int *buff_ind);
  */
 int _printf(const char *format, ...)
 {
-	int i, printed = 0, p_chars = 0;
-	int flgs, wdt, prec, siz, buf_idx = 0;
+	int i, p_chars = 0, buf_idx = 0;
+	int flgs, wdt, prec, siz;
 	va_list varg;
 	char buff[BUFF_SIZE];
 
 	if (!format || !format[0])
 		return (-1);
+
 	va_start(varg, format);
+
 	for (i = 0; format && format[i] != '\0'; i++)
 	{
 		if (format[i] != '%')
@@ -35,11 +37,11 @@ int _printf(const char *format, ...)
 			prec = get_precision(format, &i, varg);
 			siz = get_size(format, &i);
 			++i;
-			printed = print_handler(format, &i, varg, buff, flgs,
+			p_chars = print_handler(format, &i, varg, buff, flgs,
 					wdt, prec, siz);
-			if (printed == -1)
+
+			if (p_chars == -1)
 				return (-1);
-			p_chars += printed;
 		}
 	}
 	print_buffer(buff, &buf_idx);
