@@ -8,44 +8,50 @@
  */
 int _printf(const char *format, ...)
 {
-	int idx, buf, processing = TRUE, error = 1, last_token;
-
+	int idx;
+	char c, *str;
 	va_list args;
-	fmat_spec_def fmat_det;
 
 	if (!format || (format[0] == '%' && format[1] == '\0'))
 		return (-1);
-
 	va_start(args, format);
-	print_buf(0, -1);
-	for (idx = 0; format[idx] != '\0'; idx++)
+	while (format[idx] != '\0')
 	{
-		if (processing)
+		if (format[idx] == '%' && (format[idx + 1] == 'c' ||
+					format[idx + 1] == 's' || format[idx + 1] == '%'))
+			idx++;
+		if (format[idx] == 'c')
 		{
-			buf = read_format(format + idx, args, &fmat_det, &last_tokn);
-			set_error(format, &idx, buf, last_tokn, &error);
-			if (is_specifier(fmat_det.specifier))
-				set_format(&args, &fmat_det);
-			idx += (is_specifier(fmat_det.spec) ? buf : 0);
+			c = va_arg(args, int);
+			put_charto_buf(c);
 		}
-		else
+		else if (format[idx] == 's')
 		{
-			if (format[idx] == '%')
-				processing = FALSE;
+			str = va_arg(args, char *);
+			if (str)
+				putstr_to_buf(str);
 			else
-				put_charto_buf(format[idx]);
+				putstr_to_buf("(null)");
 		}
+		else if (format[idx] == '%')
+			put_charto_buf('%');
+		else
+			put_charto_buf(format[idx]);
+		idx++;
 	}
 	print_buf(0, 1);
 	va_end(args);
-	return (error <= 0 ? error : print_buf('\0', -2));
-
+	return (print_buf('\0', -2));
 }
 
 /**
  * print_buf - A function that prints the contents of a buffer if it exists
  * @c: The string of characters to print from the buffer.
  * @flag: Flag that controls the action to be taken.
+ * -1-> reset the static variables
+ * 0-> write character to buffer
+ * 1-> Don't write to buffer but empty buffer onto stdout
+ * -2-> The number of character written to stdout)
  *
  * Return: The correct output as indicated by the flag else 0 for
  * success and -1 for error.
@@ -103,8 +109,15 @@ int putstr_to_buf(char *str)
 {
 	int n, output;
 
-	for (n = 0; str && *(str + n) != 0; n++)
-		output = put_charto_buf(*(str + n));
+	if (!str)
+		return (-1);
+	while (*str)
+	{
+		output = put_charto_buf(*str);
+		if (output == -1)
+			return (-1);
+		str++;
+	}
 	return (output);
 }
 
