@@ -79,7 +79,7 @@ struct format_spec
 	char pos_sign;
 	char grp;
 	char pad;
-}
+};
 typedef struct format_spec fmat_spec_def;
 
 /**
@@ -116,7 +116,7 @@ struct float_info
 	char *exp;
 	char *mantissa;
 };
-typedef struct float_info float_typ
+typedef struct float_info float_typ;
 
 int _printf(const char *format, ...);
 int print_buf(char c, char flag);
@@ -126,14 +126,26 @@ void set_format(va_list *args, fmat_spec_def *format_det);
 
 /***************** FUNCTIONS ********************/
 
-
 /*** Functions to print characters and strings ***/
-int convert_fmat_char(va_list *arg_list, fmat_spec_def, *fmat_spec);
-int convert_fmat_percent(va_list *arg_list, fmat_spec_def *fmat_spec);
-int convert_fmat_string(va_list *arg_list,fmat_spec_def *fmat_spec);
+void set_percent_fmat(va_list *args, fmat_spec_def *fmat_spec);
+void set_pointer_fmat(va_list *args, fmat_spec_def *fmat_spec);
+void set_char_fmat(va_list *args, fmat_spec_def *fmat_spec);
+void set_string_fmat(va_list *args, fmat_spec_def *fmat_spec);
 
+/*** Functions to print unsigned integers, decimal and hexadecimal ***/
+void set_dec_fmat(va_list *list, fmat_spec_def *fmat_spec);
+void set_hexadec_format(va_list *list, fmat_spec_def *fmat_spec);
+void set_octadec_format(va_list *list, fmat_spec_def *fmat_spec);
+void set_unsigned_int_format(va_list list, fmat_spec_def *fmat_spec);
+
+/*** Helper functions for print ***/
+char is_letter(char c);
+void print_nchars(int n, ...);
+void print_ntimes(char c, int n);
+void put_numto_buf(int zeros, long num, char *str);
+void set_format_error(const char *format, int *index, int len,mint last_tokn, int *error);
 /*** Functions to print numbers ***/
-int print_int(va_list types, char buf[], int flgs, int wdt, int prec, int siz);
+void set_dec_fmat(va_list *list, fmat_spec_def *fmat_spec);
 int print_binary(va_list types, char buf[], int flgs, int wdt, int prec, int siz);
 int print_unsgned(va_list types, char buf[], int flgs, int wdt, int prec, int siz);
 int print_octal(va_list types, char buf[], int flgs, int wdt, int prec, int siz);
@@ -168,18 +180,20 @@ int prnt_pointer(char buf[], int idx, int len, int wdt, int flgs, char pad, char
 int write_unsgned(int neg, int idx, char buf[], int flgs, int wdt, int prec, int siz);
 
 
-/*** UTILS ***/
-int is_printable(char);
-int append_hex_code(char, char[], int);
-int is_digit(char);
+/*** UTIL FUNCTIONS ***/
+
+void rev_string(char *str);
+int index_of(char *str, char c);
+void left_shift(char *str, int n);
+char mem_set(char *str, char c, unsigned int n);
 
 long int convert_size_num(long int num, int siz);
 long int convert_size_unsgned(unsigned long int num, int siz);
 
-/** PARSER FUNCTION FOR PRINTF **/
+/*** PARSER FUNCTION FOR PRINTF ***/
 int read_format(const char *str, va_list list, fmat_spec_def *fmat_spec, int *last_tokn);
 
-/*** FORMAT DATA FUNCTION **/
+/*** FORMAT DATA FUNCTION ***/
 float_typ *create_new_float(u_short_typ exp_size, u_short_typ mantissa_size);
 void free_float_data(float_typ *float_data);
 void init_format_data(fmat_spec_def *specifier);

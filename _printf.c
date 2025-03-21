@@ -61,12 +61,12 @@ int print_buf(char c, char flag)
 	static int idx;
 	static char buffer[1024];
 
-	if (flag == 0 && idx < sizeof(buffer))
+	if (flag == 0 && idx < 1024)
 	{
 		buffer[idx++] = c;
 	}
 
-	if (flag == 1 || idx >= sizeof(buffer))
+	if (flag == 1 || idx >= 1024)
 	{
 		ssize_t bytes_written = write(1, buffer, idx);
 
@@ -107,7 +107,7 @@ int put_charto_buf(char c)
  */
 int putstr_to_buf(char *str)
 {
-	int n, output;
+	int output;
 
 	if (!str)
 		return (-1);
@@ -135,8 +135,8 @@ void set_format(va_list *args, fmat_spec_def *format_det)
 
 	set_specifier specifier_type[] = {
 		{'%', set_percent_fmat},
-		{'p', set_p_fmat},
-		{'c', set_c_fmat},
+		{'p', set_pointer_fmat},
+		{'c', set_char_fmat},
 		{'s', set_s_fmat},
 		{'d', set_d_fmat},
 		{'i', set_i_fmat},

@@ -14,6 +14,7 @@ void init_format_data(fmat_spec_def *specifier)
 		specifier->width = 0;
 		specifier->specifier = FALSE;
 		specifier->is_long_double = FALSE;
+		specifier->is_long_long = FALSE;
 		specifier->is_long = FALSE;
 		specifier->is_short = FALSE;
 		specifier->is_char = FALSE;

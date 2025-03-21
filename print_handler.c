@@ -1,13 +1,102 @@
 #include "main.h"
-/**
- * print_handler - A function that prints an argument based on type.
- * @format: The format in which to print the string argument.
- * @args: The list of arguments to be printed.
- * @idx: The index of the string.
- * @buf: Array of buffer that handles print.
- *
- * Return: 1 for successful execution, else 2.
- */
-int print_handler(const char *format, int *idx, va_list args, char buf[])
-{
 
+/**
+ * set_percent_fmat - A function that set format for printing percent sign (%).
+ * @args: The list of arguments to be printed.
+ * @fmat_spec: The format specifier details.
+ *
+ * Return: void.
+ */
+void set_percent_fmat(va_list *args, fmat_spec_def *fmat_spec)
+{
+	(void)args;
+	put_charto_buf(fmat_spec->specifier);
+}
+
+/**
+ * set_pointer_fmat - A function that set format for printing pointer address
+ * @args: The list of arguments to be printed.
+ * @fmat_spec: The format specifier details.
+ *
+ * Return: void.
+ */
+void set_pointer_fmat(va_list *args, fmat_spec_def *fmat_spec)
+{
+        int count, len, padding;
+	void *ptr = va_arg(*args, void *);
+	char *str = ptr_to_strng(ptr);
+
+	if (str)
+	{
+		len = str_len(str);
+		padding = MAX(len, fmat_spec->width) - len;
+		if (!fmat_spec->left)
+		{
+			for (count = 0; count < padding; count++)
+				put_charto_buf(' ');
+		}
+
+		for (count = 0; str[count] != '\0'; count++)
+			put_charto_buf(str[count]);
+		if (fmat_spec->left)
+		{
+			for (count = 0; count < padding; count++)
+				put_charto_buf(' ');
+		}
+		free(str);
+	}
+	else
+		putstr_to_buf("(nil)");
+}
+
+/**
+ * set_char_fmat - a function that set the format for printing character
+ * @args: The list of arguments to be printed.
+ * @fmat_spec: The format specifier details.
+ *
+ * Return: void.
+ */
+void set_char_fmat(va_list *args, fmat_spec_def *fmat_spec)
+{
+	int count, len = 1, padding;
+	char str = va_arg(*args, int);
+
+	padding = MAX(len, fmat_spec->width) - len;
+	if (!fmat_spec->left)
+		for (count = 0; count < padding; count++)
+			put_charto_buf(' ');
+	put_charto_buf(str);
+
+	if (fmat_spec->left)
+		for (count = 0; count < padding; count++)
+			put_charto_buf(' ');
+}
+
+/**
+ * set_string_fmat - a function that set the format for printing character
+ * @args: The list of arguments to be printed.
+ * @fmat_spec: The format specifier details.
+ *
+ * Return: void.
+ */
+void set_string_fmat(va_list *args, fmat_spec_def *fmat_spec)
+{
+	int count, len, padding;
+	char *str = va_arg(*args, char *);
+	char null[] = "(null)";
+
+	str = str ? str : null;
+	len = fmat_spec->is_precision_set && fmat_spec->precision >= 0 ?
+		fmat_spec->precision : str_len(str);
+	padding = MAX(len, fmat_spec->width) - len;
+	if (!fmat_spec->left)
+		for (count = 0; count < padding; count++)
+			put_charto_buf(' ');
+
+	for (count = 0; count < len && str[count] != '\0'; count++)
+		put_charto_buf(str[count]);
+
+	if (fmat_spec->left)
+		for (count = 0; count < padding; count++)
+			put_charto_buf(' ');
+}
