@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
+#include <stdbool.h>
 
 #ifndef TRUE
 #define TRUE 1
@@ -94,6 +95,18 @@ struct print_specifier
 	char specifier;
 	void (*func)(va_list *args, fmat_spec_def *fmat_spec);
 };
+
+/**
+ * union - A function that allows multiple members to occupy same memory location
+ * @duo: The representation for double
+ * @bits: The representation for size
+ * @un: The union name
+ */
+union
+        {
+                double duo;
+                uint64_t bits;
+        } un;
 /**
  * typedef struct formatt format_type - Struct operator
  *
@@ -110,13 +123,13 @@ typedef unsigned short u_short_typ;
  * @exp: The exponential of the float
  * @mantissa: The mantissa of the float
  */
-struct float_info
+struct float_data
 {
 	char float_sign;
 	char *exp;
 	char *mantissa;
 };
-typedef struct float_info float_typ;
+typedef struct float_data float_typ;
 
 int _printf(const char *format, ...);
 int print_buf(char c, char flag);
@@ -139,26 +152,34 @@ void set_octadec_format(va_list *list, fmat_spec_def *fmat_spec);
 void set_unsigned_int_format(va_list list, fmat_spec_def *fmat_spec);
 
 /*** Helper functions for print ***/
+char is_specifier(char c);
+int is_digit(char c);
+char is_flag(char c);
 char is_letter(char c);
+char is_length(char c);
+char is_specifier(char c);
 void print_nchars(int n, ...);
 void print_ntimes(char c, int n);
+char is_non_custom_specifier(char c);
 void put_numto_buf(int zeros, long num, char *str);
 void set_format_error(const char *format, int *index, int len,mint last_tokn, int *error);
+
+/*** Functions to print character and string ***/
+void set_char_fmat(va_list *args, fmat_spec_def *fmat_spec);
+void set_string_fmat(va_list *args, fmat_spec_def *fmat_spec);
+void set_pointer_fmat(va_list *args, fmat_spec_def *fmat_spec);
+void set_percent_fmat(va_list *args, fmat_spec_def *fmat_spec);
+
 /*** Functions to print numbers ***/
 void set_dec_fmat(va_list *list, fmat_spec_def *fmat_spec);
-int print_binary(va_list types, char buf[], int flgs, int wdt, int prec, int siz);
-int print_unsgned(va_list types, char buf[], int flgs, int wdt, int prec, int siz);
-int print_octal(va_list types, char buf[], int flgs, int wdt, int prec, int siz);
-int print_hexadecimal(va_list types, char buffer[], int flgs, int wdt, int prec, int siz);
-int print_upper_hex(va_list types, char buf[], int flgs, int wdt, int prec, int siz);
-int print_hex(va_list types, char map[], char buf[], int flgs,
-		char flg_ch, int wdt, int prec, int siz);
+void set_rot13_format(va_list *list, fmat_spec_def *fmat_spec);
+void set_revstr_format(va_list *list, fmat_spec_def *fmat_spec);
+void set_binary_format(va_list *list, fmat_spec_def *fmat_spec);
+void set_octadec_format(va_list *list, fmat_spec_def *fmat_spec);
+void set_hexadec_format(va_list *list, fmat_spec_def *fmat_spec);
+void set_hexacode_format(va_list *list, fmat_spec_def *fmat_spec);
+void set_unsigned_int_format(va_list *list, fmat_spec_def *fmat_spec);
 
-/*** Function to print non printable characters ***/
-int print_non_printable(va_list types, char buf[], int flgs, int wdt, int prec, int siz);
-
-/*** Function to print memory address ***/
-int pointer(va_list types, char buf[], int flgs, int wdt, int prec, int siz);
 
 /*** Function to handle other specifiers ***/
 int get_flags(const char *fmt, int *f);
@@ -166,38 +187,60 @@ int get_width(const char *fmt, int *w, va_list lists);
 int get_precision(const char *fmt, int *p, va_list list);
 int get_size(const char *fmt, int *s);
 
-/*** Function to print string in reverse ***/
-int print_reverse(va_list types, char buf[], int flgs, int wdt, int prec, int siz);
-
-/*** Function that print a string in rot 13 ***/
-int rot13_string(va_list types, char buf[], int flgs, int wdt, int prec, int siz);
-
-/*** width handler ***/
-int handle_write_char(char c, char buf[], int flgs, int wdt, int prec, int siz);
-int write_numb(int neg, int idx, char buf[], int flgs, int wdt, int prec, int siz);
-int write_num(int idx, char buf[], int flgs, int wdt, int prec, int len, char pad, char xtra_ch);
-int prnt_pointer(char buf[], int idx, int len, int wdt, int flgs, char pad, char xtra_ch, int pad_start);
-int write_unsgned(int neg, int idx, char buf[], int flgs, int wdt, int prec, int siz);
-
-
 /*** UTIL FUNCTIONS ***/
 
+int str_len(char *str);
 void rev_string(char *str);
-int index_of(char *str, char c);
-void left_shift(char *str, int n);
+void shift_left(char *str, int n);
+int count_char(char *scr, char ch);
+int index_of_char(char *str, char c);
+char *sub_str(char *str, int n, bool free);
+char *str_cat(char *main, char *sec, bool free);
 char mem_set(char *str, char c, unsigned int n);
+char *delete_char(char *str, char ch, bool free);
+char *trim_end(char *str, char ch, bool free_str);
+char *trim_start(char *str, char ch, bool free_str);
+char *append_char(char *str, char ch, int n, bool free);
+char *insert_char(char *src, int pos, char ch, bool free);
 
 long int convert_size_num(long int num, int siz);
 long int convert_size_unsgned(unsigned long int num, int siz);
 
-/*** PARSER FUNCTION FOR PRINTF ***/
-int read_format(const char *str, va_list list, fmat_spec_def *fmat_spec, int *last_tokn);
+/*** Mathematical Functions ***/
+int convert_str_to_int(char *num);
+int convert_bin_to_str(char *arr);
+char convert_to_hexadecimal(char c);
+char *compute_npower_of_two(short n);
+char compare_numbers(char *n1, char *n2);
+char *convert_long_to_oct(unsigned long num);
+char *strn_copy(char *dest, char *src, int n);
+char *compute_npower_of_five(unsigned short n);
+char *round_float(char *num, unsigned int prec);
+unsigned int pos_num_powerof_two(unsigned int n);
+char *round_float_to_int(char *num, bool free_mem);
+char *multiply_int(char *n1, char *n2, char free_mem);
+char *unsigned_long_to_hex(unsigned long num, char upper);
+char *add_positive_nums(char *n1, char *n2, char free_mem);
+char *multiply_float(char *num1, char *num2, char free_mem);
+char *round_up(char *num, unsigned int prec, bool free_mem);
+char *add_positive_float_nums(char *n1, char *n2, int free_mem);
+char *divide_by_10exp_n(char *num, unsigned short n, char free_num);
+char *multiply_by_multiple_of_10(const char *num1, const char *num_10);
 
-/*** FORMAT DATA FUNCTION ***/
-float_typ *create_new_float(u_short_typ exp_size, u_short_typ mantissa_size);
+/*** Parser function for printf ***/
+int set_number(const char *str, int *num);
+int set_flags(const char *str, fmat_spec_def *fmat_spec);
+void set_length(char ch_cur, int *pos, fmat_spec_def *fmat_spec);
+void set_precision(const char *str, va_list list, fmat_spec_def *fmat_spec,
+                int *n, int *err)
+int read_format(const char *str, va_list list, fmat_spec_def *fmat_spec,
+		int *last_tokn);
+
+/*** Format data function ***/
+float_typ *create_new_float(u_short_typ size_exp, u_short_typ size_mant);
+float_typ *create_new_float(u_short_typ exp_size, u_short_typ mantissa_size)
 void free_float_data(float_typ *float_data);
 void init_format_data(fmat_spec_def *specifier);
 fmat_spec_def *create_new_format();
-
 
 #endif /** _PRINTF_HEADER_ **/

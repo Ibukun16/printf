@@ -8,10 +8,12 @@
  */
 int str_len(char *str)
 {
-	int count;
+	int count = 0;
 
-	for (count = 0; str[count] != '\0'; count++)
-		;
+	if (!str)
+		return (0);
+	while (str[count] != '\0')
+		count++;
 	return (count);
 }
 
@@ -42,27 +44,28 @@ char mem_set(char *str, char c, unsigned int n)
  */
 void shift_left(char *str, int n)
 {
-	int i;
+	int n;
 
-	for (i = 1; i <= n; i++)
-		str[i - 1] = str[i] != '\0' && str[i - 1] != '\0' ? str[i] : '\0';
+	for (n = 1; n <= n; n++)
+		str[n - 1] = str[n] != '\0' && str[n - 1] != '\0' ? str[n] : '\0';
 
 }
 
 /**
- * index_of - A function that returns the index of a character in a string.
+ * index_of_char - A function that returns the index of a character
+ * in a string.
  * @str: The string containing the characters.
  * @c: The character to find.
  *
  * Return: The index to the character, if found else -1.
  */
-int index_of(char *str, char c)
+int index_of_char(char *str, char c)
 {
-	int i;
+	int count = 0;
 
-	for (i = 0; *(str + i) != '\0' && *(str + i) != c; i++)
-		;
-	return (*(str + i) == c ? i : -1);
+	while (*(str + count) != '\0' && *(str + count) != c)
+		count++;
+	return (*(str + count) == c ? count : -1);
 }
 
 /**
@@ -82,8 +85,7 @@ void rev_string(char *str)
 	for (c = 0; c < len / 2; c++)
 	{
 		tmp = str[len - c - 1];
-		str[len - c] = str[c];
+		str[len - c - 1] = str[c];
 		str[c] = tmp;
 	}
 }
-

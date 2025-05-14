@@ -35,7 +35,7 @@ void print_nchars(int n, ...)
 }
 
 /**
- * is_letter - A function that checks if a given character is a letter
+ * is_letter - A function that checks if a given character is a character
  * @c: The character to check
  *
  * Return: 1 if c is a letter else 0.
