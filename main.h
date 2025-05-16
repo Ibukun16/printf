@@ -1,5 +1,8 @@
 #ifndef _PRINTF_HEADER_
 #define _PRINTF_HEADER_
+#include <inttypes.h>
+#include <ctype.h>
+#include <stddef.h>
 #include <stdarg.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -53,13 +56,13 @@
  * @is_long_double: Specifies the presence of the 'L' length modifier
  * @is_long: Specifies the presence of the 'l' length modifier
  * @is_long_long: Specifies the presence of the 'll' length modifier
- * @set_precision: Specifies the presence of a value for precision
- * @set_width: Specifies the presence of a value for width
- * @set_flag: Specifies the presence of the '#' flag
+ * @is_precision_set: Specifies the presence of a value for precision
+ * @is_width_set: Specifies the presence of a value for width
+ * @alt: Specifies the presence of the '#' flag
  * @space: Specifies the presence of the ' ' (invisible plus sign) flag
  * @left: Specifies the presence of the '-' (left-align) flag
  * @pos_sign: Specifies the presence of the '+' flag
- * @grp: The current locale's digit separator for integers
+ * @group: The current locale's digit separator for integers
  * @pad: The character to use for padding the output
  */
 struct format_spec
@@ -72,16 +75,17 @@ struct format_spec
 	char is_long_double;
 	char is_long;
 	char is_long_long;
-	char set_precision;
-	char set_width;
-	char set_flag;
+	char is_precision_set;
+	char is_width_set;
+	char alt;
 	char space;
 	char left;
 	char pos_sign;
-	char grp;
+	char group;
 	char pad;
 };
 typedef struct format_spec fmat_spec_def;
+
 
 /**
  * struct print_specifier - Struct operator of a function that prints
@@ -96,6 +100,7 @@ struct print_specifier
 	void (*func)(va_list *args, fmat_spec_def *fmat_spec);
 };
 
+
 /**
  * union - A function that allows multiple members to occupy same memory location
  * @duo: The representation for double
@@ -107,6 +112,8 @@ union
                 double duo;
                 uint64_t bits;
         } un;
+
+
 /**
  * typedef struct formatt format_type - Struct operator
  *
@@ -116,6 +123,7 @@ union
 typedef struct print_specifier set_specifier;
 typedef unsigned char u_char_typ;
 typedef unsigned short u_short_typ;
+
 
 /**
  * struct float_info - Struct function that represents the IEE754 spec of a float
@@ -131,11 +139,14 @@ struct float_data
 };
 typedef struct float_data float_typ;
 
+
 int _printf(const char *format, ...);
 int print_buf(char c, char flag);
 int put_charto_buf(char c);
 int putstr_to_buf(char *str);
 void set_format(va_list *args, fmat_spec_def *format_det);
+
+
 
 /***************** FUNCTIONS ********************/
 
@@ -162,7 +173,8 @@ void print_nchars(int n, ...);
 void print_ntimes(char c, int n);
 char is_non_custom_specifier(char c);
 void put_numto_buf(int zeros, long num, char *str);
-void set_format_error(const char *format, int *index, int len,mint last_tokn, int *error);
+void set_format_error(const char *format, int *index, int len,
+		int last_tokn, int *error);
 
 /*** Functions to print character and string ***/
 void set_char_fmat(va_list *args, fmat_spec_def *fmat_spec);
@@ -187,14 +199,19 @@ int get_width(const char *fmt, int *w, va_list lists);
 int get_precision(const char *fmt, int *p, va_list list);
 int get_size(const char *fmt, int *s);
 
-/*** UTIL FUNCTIONS ***/
-
+/*** Util Functions ***/
 int str_len(char *str);
 void rev_string(char *str);
+char *ptr_to_str(void *ptr);
 void shift_left(char *str, int n);
 int count_char(char *scr, char ch);
+char *convert_long_to_str(long num);
 int index_of_char(char *str, char c);
+char *is_invalid(float_typ *flot_data);
 char *sub_str(char *str, int n, bool free);
+char *convert_long_long_to_str(long long num);
+char *convert_u_long_to_str(unsigned long num);
+char *convert_u_long_to_str(unsigned long num);
 char *str_cat(char *main, char *sec, bool free);
 char mem_set(char *str, char c, unsigned int n);
 char *delete_char(char *str, char ch, bool free);
@@ -202,6 +219,7 @@ char *trim_end(char *str, char ch, bool free_str);
 char *trim_start(char *str, char ch, bool free_str);
 char *append_char(char *str, char ch, int n, bool free);
 char *insert_char(char *src, int pos, char ch, bool free);
+char *convert_unsigned_to_str(unsigned long long num, int neg);
 
 long int convert_size_num(long int num, int siz);
 long int convert_size_unsgned(unsigned long int num, int siz);

@@ -8,25 +8,28 @@
  */
 void init_format_data(fmat_spec_def *specifier)
 {
-	if (specifier)
-	{
-		specifier->precision = 1;
-		specifier->width = 0;
-		specifier->specifier = FALSE;
-		specifier->is_long_double = FALSE;
-		specifier->is_long_long = FALSE;
-		specifier->is_long = FALSE;
-		specifier->is_short = FALSE;
-		specifier->is_char = FALSE;
-		specifier->is_precision_set = FALSE;
-		specifier->is_width_set = FALSE;
-		specifier->alt = FALSE;
-		specifier->space = FALSE;
-		specifier->left = FALSE;
-		specifier->show_sign = FALSE;
-		specifier->group = FALSE;
-		specifier->pad = ' ';
-	}
+	if (!specifier)
+		return;
+	specifier->precision = 1;
+	specifier->width = 0;
+	specifier->specifier = FALSE;
+
+	specifier->is_long_double = FALSE;
+	specifier->is_long_long = FALSE;
+	specifier->is_long = FALSE;
+	specifier->is_short = FALSE;
+	specifier->is_char = FALSE;
+
+	specifier->is_precision_set = FALSE;
+	specifier->is_width_set = FALSE;
+
+	specifier->alt = FALSE;
+	specifier->space = FALSE;
+	specifier->left = FALSE;
+	specifier->show_sign = FALSE;
+	specifier->group = FALSE;
+
+	specifier->pad = ' ';
 }
 
 /**
@@ -86,4 +89,4 @@ void free_float_data(float_typ *float_data)
 			free(float_data->mantissa);
 		free(float_data);
 	}
-}
+

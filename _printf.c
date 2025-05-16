@@ -8,40 +8,39 @@
  */
 int _printf(const char *format, ...)
 {
-	int idx;
-	char c, *str;
+	int idx = 0, tmp, processing = 1, err = 1, last_tkn;
+	fmat_spec_def fmat_data;
 	va_list args;
 
 	if (!format || (format[0] == '%' && format[1] == '\0'))
 		return (-1);
 	va_start(args, format);
-	while (format[idx] != '\0')
+	print_buf(0, BUF_INIT);
+	for (idx = 0; format[idx] != '\0'; idx++)
 	{
-		if (format[idx] == '%' && (format[idx + 1] == 'c' ||
-					format[idx + 1] == 's' || format[idx + 1] == '%'))
-			idx++;
-		if (format[idx] == 'c')
+		if (processing)
 		{
-			c = va_arg(args, int);
-			put_charto_buf(c);
-		}
-		else if (format[idx] == 's')
-		{
-			str = va_arg(args, char *);
-			if (str)
-				putstr_to_buf(str);
+			if (format[idx] == '%')
+				processing = 0;
 			else
-				putstr_to_buf("(null)");
+				put_charto_buf(format[idx]);
+			idx++;
 		}
-		else if (format[idx] == '%')
-			put_charto_buf('%');
 		else
-			put_charto_buf(format[idx]);
-		idx++;
+		{
+			tmp = read_format(format[idx], args, &fmat_data, &last_tkn);
+			set_format_error(format, &idx, tmp, last_tkn, &err);
+			if (is_specifier(fmat_data.spec))
+			{
+				set_format(&args, &fmat_data);
+				idx += tmp;
+			}
+			processing = 1;
+		}
 	}
-	print_buf(0, 1);
+	print_buf(0, BUF_FLUSH);
 	va_end(args);
-	return (print_buf('\0', -2));
+	return (err < 0 ? -1 : print_buf('\0', BUF_COUNT));
 }
 
 /**

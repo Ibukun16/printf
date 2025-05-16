@@ -17,13 +17,8 @@ void set_float_parts(double num, u_char_typ exp_size, u_char_typ mant_size,
 	int n;
 	char *str;
 	u_char_typ size = exp_size + mant_size + 1;
-	union
-	{
-		double duo;
-		uint64_t bits;
-	} un;
-	un.duo = num;
 
+	un.duo = num;
 	str = malloc(sizeof(char) * (size + 1));
 	if (!str)
 		return;

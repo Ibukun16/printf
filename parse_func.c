@@ -16,13 +16,13 @@ int set_number(const char *str, int *num)
 	{
 		if (m < 10 && is_digit(str[n]))
 		{
-			digits[m] = str[n];
+			dgt[m] = str[n];
 			m++;
 		}
 		else
 			break;
 	}
-	*num = compare_numbers(dgt, MAX_WIDTH) <= 0 ? str_to_int(dgt) : 0;
+	*num = compare_numbers(dgt, MAX_WIDTH) <= 0 ? convert_str_to_int(dgt) : 0;
 	return (n);
 }
 

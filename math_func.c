@@ -58,27 +58,27 @@ char compare_numbers(char *n1, char *n2)
 int convert_str_to_int(char *num)
 {
 	int count, len, exp = 1, result = 0;
-	int is_negative = 0;
+	int neg = 0;
 
 	len = str_len(num);
 	if (num[0] == '-')
 	{
-		is_negative = 1;
+		neg = 1;
 		num++;
 		len--;
 	}
 
 	for (count = len - 1; count >= 0; count--)
 	{
-		if (is_digit(*(num + count))
+		if (is_digit(unsigned char)(num[count]))
 		{
-			result += (*(num + count) - '0') * exp;
+			result += (num[count] - '0') * exp;
 			exp *= 10;
 		}
 		else
-		return (0);
+			return (0);
 	}
-	if (is_negative)
+	if (neg)
 		result *= -1;
 	return (result);
 }
@@ -95,12 +95,11 @@ int convert_bin_to_int(char *arr)
 
 	for (count = 0; arr[count] != '\0'; count++)
 	{
-		if (*(arr + count) == '0' || *(arr + count) == '1')
-			result = result * 2 + (*(arr + count) - '0');
+		if (arr[count] == '0' || arr[count] == '1')
+			result = result * 2 + (arr[count] - '0');
 		else
 			return (-1);
 	}
-
 	return (result);
 }
 
