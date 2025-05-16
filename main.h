@@ -45,6 +45,9 @@
 /**** SIZES ****/
 #define S_LONG 2
 #define S_SHORT 1
+#define BUF_INIT -1
+#define BUF_FLUSH 1
+#define BUF_COUNT -2
 
 /**
  * struct format_spec - Specifier of the struct elements.
@@ -145,7 +148,6 @@ int print_buf(char c, char flag);
 int put_charto_buf(char c);
 int putstr_to_buf(char *str);
 void set_format(va_list *args, fmat_spec_def *format_det);
-
 
 
 /***************** FUNCTIONS ********************/
