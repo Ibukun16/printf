@@ -12,12 +12,11 @@
  */
 char *append_char(char *str, char ch, int n, bool free_str)
 {
-	if (!str || n < 0)
-		return (NULL);
-
 	int count, size;
 	char *new_str;
 
+	if (!str || n < 0)
+		return (NULL);
 	size = str ? str_len(str) : 0;
 	new_str = malloc(sizeof(char) * (size + n + 1));
 	if (!new_str)
@@ -41,12 +40,11 @@ char *append_char(char *str, char ch, int n, bool free_str)
  */
 char *delete_char(char *str, char ch, bool free_str)
 {
-	if (!str)
-		return (NULL);
-
 	char *new_str;
 	int len = str_len(str), ch_count = count_char(str, ch), n, m;
 
+	if (!str)
+		return (NULL);
 	new_str = malloc(sizeof(char) * (len - ch_count + 1));
 	if (!new_str)
 		return (NULL);
@@ -54,7 +52,7 @@ char *delete_char(char *str, char ch, bool free_str)
 		if (str[n] != ch)
 			new_str[m++] = str[n];
 	new_str[m] = '\0';
-	if (free)
+	if (free_str)
 		free(str);
 	return (new_str);
 }
@@ -70,12 +68,11 @@ char *delete_char(char *str, char ch, bool free_str)
  */
 char *insert_char(char *src, int pos, char ch, bool free_str)
 {
-	if (!src || pos < 0)
-		return (NULL);
-
 	char *new_str;
 	int n, m, len = str_len(src);
-
+	
+	if (!src || pos < 0)
+		return (NULL);
 	if (pos > len)
 		return (NULL);
 	new_str = malloc(sizeof(char) * (len + 2));
@@ -85,7 +82,7 @@ char *insert_char(char *src, int pos, char ch, bool free_str)
 	{
 		if (n == pos)
 			new_str[m++] = ch;
-		new_str[m] = str[n];
+		new_str[m] = src[n];
 		m++;
 	}
 	if (pos == len)
@@ -108,8 +105,8 @@ int count_char(char *src, char ch)
 {
 	int count = 0, n;
 
-	for (n = 0; src != NULL && src[n] != '\0'; n++)
-		count += src[n] == c ? 1 : 0;
+	for (n = 0; src && src[n] != '\0'; n++)
+		count += src[n] == ch ? 1 : 0;
 	return (count);
 }
 
@@ -130,7 +127,7 @@ char *str_cat(char *main, char *sec, bool free_str)
 
 	if (main == NULL && sec == NULL)
 		return (NULL);
-	size = malloc(sizeof(char) * (main + sec + 1));
+	new_str = malloc(sizeof(char) * (len1 + len2 + 1));
 	if (!new_str)
 		return (NULL);
 	for (count = 0; main[count] != '\0'; count++)

@@ -1,4 +1,4 @@
-#include "main.c"
+#include "main.h"
 
 /**
  * convert_to_hexadecimal - A function that convertys a decimal number
@@ -70,7 +70,7 @@ int convert_str_to_int(char *num)
 
 	for (count = len - 1; count >= 0; count--)
 	{
-		if (is_digit(unsigned char)(num[count]))
+		if (is_digit(num[count]))
 		{
 			result += (num[count] - '0') * exp;
 			exp *= 10;

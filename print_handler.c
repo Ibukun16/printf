@@ -24,7 +24,7 @@ void set_pointer_fmat(va_list *args, fmat_spec_def *fmat_spec)
 {
         int count, len, padding;
 	void *ptr = va_arg(*args, void *);
-	char *str = ptr_to_strng(ptr);
+	char *str = ptr_to_str(ptr);
 
 	if (str)
 	{

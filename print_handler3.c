@@ -8,11 +8,11 @@
  *
  * Return: void.
  */
-void set_double_format(va_list *list, fmat_spec_def *fmat_spec)
+void set_double_fmat(va_list *list, fmat_spec_def *fmat_spec)
 {
 	int count, len, padding, zeros, width_max;
 	double num = va_arg(*list, double);
-	char *s, signd = (num >= 0 && fmat_spec->show_sign) || num < 0;
+	char *s, signd = (num >= 0 && fmat_spec->pos_sign) || num < 0;
 	u_short_typ size_exp = fmat_spec->is_long_double ? 15 : 11;
 	u_short_typ size_mant = fmat_spec->is_long_double ? 64 : 52;
 	float_typ *floatt;
@@ -20,13 +20,13 @@ void set_double_format(va_list *list, fmat_spec_def *fmat_spec)
 	floatt = create_new_float(size_exp, size_mant);
 	if (!floatt)
 		return;
-	set_float_para(num, size_exp, size_mant, floatt);
+	set_float_parts(num, size_exp, size_mant, floatt);
 	s = is_invalid(floatt);
 	if (s == NULL)
 	{
 		s = float_to_str(floatt, FALSE);
 		s = round_float(s, fmat_spec->is_precision_set ?
-				fmat_spec->precision : 6, T);
+				fmat_spec->precision : 6);
 		len = str_len(s) + (signd ? 1 : 0);
 		width_max = MAX(fmat_spec->width, len);
 		zeros = (!fmat_spec->left && fmat_spec->pad == '0') ? width_max - len : 0;

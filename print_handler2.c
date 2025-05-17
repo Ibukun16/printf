@@ -1,14 +1,14 @@
 #include "main.h"
 
 /**
- * set_binary_format - A function that set format of an unsigned binary
+ * set_binary_fmat - A function that set format of an unsigned binary
  * integer to print.
  * @list: The argument list
  * @fmat_spec: The format specifier details
  *
  * Return: void.
  */
-void set_binary_format(va_list *list, fmat_spec_def *fmat_spec)
+void set_binary_fmat(va_list *list, fmat_spec_def *fmat_spec)
 {
 	int count, len = 0, padding, size = 32;
 	unsigned int num = va_arg(*list, unsigned int), temp;
@@ -19,7 +19,7 @@ void set_binary_format(va_list *list, fmat_spec_def *fmat_spec)
 	{
 		mem_set(str, size, '\0');
 		temp = num;
-		padding = MAX(len, fmat_spec->width) - len
+		padding = MAX(len, fmat_spec->width) - len;
 		for (count = 0; count < size && temp > 0; count++, len++)
 		{
 			str[count] = (temp % 2) + '0';
@@ -41,14 +41,14 @@ void set_binary_format(va_list *list, fmat_spec_def *fmat_spec)
 }
 
 /**
- * set_hexacode_format - A function that set the format for string and
+ * set_hexacode_fmat - A function that set the format for string and
  * hexadecimal code for non-printable characters.
  * @list: The argument list
  * @fmat_spec: The format specifier details
  *
  * Return: void.
  */
-void set_hexacode_format(va_list *list, fmat_spec_def *fmat_spec)
+void set_hexacode_fmat(va_list *list, fmat_spec_def *fmat_spec)
 {
 	int count, len, padding;
 	char *str = va_arg(*list, char *);
@@ -67,8 +67,8 @@ void set_hexacode_format(va_list *list, fmat_spec_def *fmat_spec)
 			{
 				put_charto_buf('\\');
 				put_charto_buf('x');
-				put_charto_buf(TO_UPPER(hex_digit(str[count] / 16)));
-				put_charto_buf(TO_UPPER(hex_digit(str[count] % 16)));
+				put_charto_buf(TO_UPPER(convert_to_hexadecimal(str[count] / 16)));
+				put_charto_buf(TO_UPPER(convert_to_hexadecimal(str[count] % 16)));
 			}
 			else
 				put_charto_buf(str[count]);
@@ -82,13 +82,13 @@ void set_hexacode_format(va_list *list, fmat_spec_def *fmat_spec)
 }
 
 /**
- * set_rot13_format - A function that set the format to print rot13 string
+ * set_rot13_fmat - A function that set the format to print rot13 string
  * @list: The argument list
  * @fmat_spec: The format specifier information
  *
  * Return: void.
  */
-void set_rot13_format(va_list *list, fmat_spec_def *fmat_spec)
+void set_rot13_fmat(va_list *list, fmat_spec_def *fmat_spec)
 {
 	int count, len, padding;
 	char *s = va_arg(*list, char *);
@@ -118,15 +118,15 @@ void set_rot13_format(va_list *list, fmat_spec_def *fmat_spec)
 }
 
 /**
- * set_revstr_format - A function that set the format to print reversed string
+ * set_revstr_fmat - A function that set the format to print reversed string
  * @list: pointer to the argument list
  * @fmat_spec: The format specifier information.
  *
  * Return: void.
  */
-void set_revstr_format(va_list *list, fmat_spec_def *fmat_spec)
+void set_revstr_fmat(va_list *list, fmat_spec_def *fmat_spec)
 {
-	int count, len;
+	int count, len, padding;
 	char *s = va_arg(*list, char *);
 
 	if (s)

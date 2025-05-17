@@ -24,10 +24,10 @@ void print_ntimes(char c, int n)
 void print_nchars(int n, ...)
 {
 	int count;
-	va_list *list;
+	va_list list;
 
 	if (n <= 0)
-		return (0);
+		return;
 	va_start(list, n);
 	for (count = 0; count < n; count++)
 		put_charto_buf(va_arg(list, int));
@@ -42,7 +42,7 @@ void print_nchars(int n, ...)
  */
 char is_letter(char c)
 {
-	return (((c >= 'a' && c <= 'z') || c >= 'A' && c <= 'Z') ? TRUE : FALSE);
+	return (((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')) ? TRUE : FALSE);
 }
 
 /**

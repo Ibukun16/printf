@@ -28,9 +28,9 @@ int _printf(const char *format, ...)
 		}
 		else
 		{
-			tmp = read_format(format[idx], args, &fmat_data, &last_tkn);
+			tmp = read_format(format + idx, args, &fmat_data, &last_tkn);
 			set_format_error(format, &idx, tmp, last_tkn, &err);
-			if (is_specifier(fmat_data.spec))
+			if (is_specifier(fmat_data.specifier))
 			{
 				set_format(&args, &fmat_data);
 				idx += tmp;
@@ -130,32 +130,32 @@ int putstr_to_buf(char *str)
  */
 void set_format(va_list *args, fmat_spec_def *format_det)
 {
-	int count;
+	int n;
 
 	set_specifier specifier_type[] = {
 		{'%', set_percent_fmat},
 		{'p', set_pointer_fmat},
 		{'c', set_char_fmat},
-		{'s', set_s_fmat},
-		{'d', set_d_fmat},
-		{'i', set_i_fmat},
-		{'X', set_bigX_fmat},
-		{'x', set_smallx_fmat},
-		{'o', set_o_fmat},
-		{'u', set_u_fmat},
+		{'s', set_string_fmat},
+		{'d', set_dec_fmat},
+		{'i', set_dec_fmat},
+		{'X', set_hexadec_fmat},
+		{'x', set_hexadec_fmat},
+		{'o', set_octadec_fmat},
+		{'u', set_unsigned_int_fmat},
 		/* # begin custom specifiers */
-		{'b', set_b_fmat},
-		{'R', set_R_fmat},
-		{'r', set_r_fmat},
-		{'S', set_S_fmat},
+		{'b', set_binary_fmat},
+		{'R', set_rot13_fmat},
+		{'r', set_revstr_fmat},
+		{'S', set_hexacode_fmat},
 		/* #end */
-		{'F', set_bigF_fmat},
-		{'f', set_smallf_fmat},
+		{'F', set_double_fmat},
+		{'f', set_double_fmat},
 	};
-	for (count = 0; count < 23 && specifier_type[count].spec != '\0'; count++)
-		if (fmat_spec->spec == specifier_type[count].spec)
+	for (n = 0; n < 23 && specifier_type[n].specifier != '\0'; n++)
+		if (format_det->specifier == specifier_type[n].specifier)
 		{
-			specifier_type[count].print_args(args, fmat_spec);
+			specifier_type[n].print(args, format_det);
 			break;
 		}
 }

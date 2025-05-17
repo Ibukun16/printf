@@ -8,30 +8,31 @@
  */
 char *ptr_to_str(void *ptr)
 {
-	char *res, *hex_part, *prefix = "0x", temp;
-	int dgt, n, m, size;
+	char *res, *hex_part, *prefix = "0x";
+	int dgt, n = 0, size;
 	uintptr_t tmp;
 
 	if (!ptr)
+	{
+		res = malloc(sizeof("(nil)"));
+		if (!res)
+			return (NULL);
 		return (strn_copy(res, "(nil)", 0));
+	}
 	tmp = (uintptr_t)ptr;
-	size = sizeof(unitptr_t) * 2;
+	size = sizeof(uintptr_t) * 2;
 	hex_part = malloc(sizeof(char) * (size + 1));
 	if (!hex_part)
 		return (NULL);
 	mem_set(hex_part, size, '0');
-	for (n = 0; n < size && tmp > 0; n++)
-	{
+	do {
 		dgt = tmp % 16;
 		hex_part[n] = dgt < 10 ? dgt + '0' : dgt - 10 + 'a';
 		tmp /= 16;
-	}
-	if (n == 0)
-		hex_part[n++] = '0';
+	} while (tmp > 0);
 	hex_part[n] = '\0';
 	rev_string(hex_part);
-
-	res = malloc(str_len(prefix) + str_len(hex_part) + 1);
+	res = malloc(sizeof(char) * (str_len(prefix) + str_len(hex_part) + 1));
 	if (!res)
 	{
 		free(hex_part);
@@ -50,14 +51,13 @@ char *ptr_to_str(void *ptr)
  */
 char *is_invalid(float_typ *flot_data)
 {
-	if (!flot_data || !flot_data->mantissa || !flot_data->exp)
-		return (NULL);
-
 	int exp_bits = 0, mant_bits = 0;
 	int lsb_on = 0, msb_on = 0, n;
 	int mant_len = str_len(flot_data->mantissa);
 	int exp_len = str_len(flot_data->exp);
 
+	if (!flot_data || !flot_data->mantissa || !flot_data->exp)
+		return (NULL);
 	for (n = 0; flot_data->exp[n] != '\0'; n++)
 	{
 		if (flot_data->exp[n] == '1')

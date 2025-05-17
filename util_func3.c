@@ -11,20 +11,20 @@
 void set_float_parts(double num, u_char_typ exp_size, u_char_typ mant_size,
 		float_typ *float_t)
 {
-	if (float_t == NULL || float_t->exp == NULL || float_t->mantissa == NULL)
-		return;
-
 	int n;
 	char *str;
+	un u;
 	u_char_typ size = exp_size + mant_size + 1;
 
-	un.duo = num;
+	if (float_t == NULL || float_t->exp == NULL || float_t->mantissa == NULL)
+		return;
+	u.duo = num;
 	str = malloc(sizeof(char) * (size + 1));
 	if (!str)
 		return;
 
 	for (n = 0; n < size; n++)
-		str[n] = ((un.bits >> n) & 1) + '0';
+		str[n] = (u.bits >> (63 - n) & 1) + '0';
 	str[size] = '\0';
 
 	rev_string(str);
@@ -72,7 +72,7 @@ char *mantissa_to_dec_frac(char *mantis, unsigned short frac_len)
 			str = add_positive_float_nums(pwr, res, TRUE);
 			if (!str)
 			{
-				free(res)
+				free(res);
 				return (NULL);
 			}
 			free(res);

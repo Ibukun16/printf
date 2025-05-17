@@ -7,22 +7,22 @@
  *
  * Return: The quotient of the division by the power of 10.
  */
-char *divide_by_10exp_n(char *num, unsigned short n, char free_num)
+char *divide_by_10exp_n(char *num, unsigned short n, bool free_num)
 {
+	int len, dotpos, dest, src, n_pos, lead_zeros, size;
+	char *res;
+
 	if (n == 0)
 		return (num);
-
-	int len = str_len(num), dotpos = index_of_char(num, '.'), dest, idx, src;
-	int n_pos = (dotpos < 0) ? (len - n) : (dotpos - n);
-	int lead_zeros = (n_pos < 0) ? -n_pos : 0;
-	int size = len + (n_pos < 0 ? (lead_zeros + (dotpos < 0 ? 1 : 0)) :
+	len = str_len(num), dotpos = index_of_char(num, '.');
+	n_pos = (dotpos < 0) ? (len - n) : (dotpos - n);
+	lead_zeros = (n_pos < 0) ? -n_pos : 0;
+	size = len + (n_pos < 0 ? (lead_zeros + (dotpos < 0 ? 1 : 0)) :
 			(n_pos == 0 ? (dotpos < 0 ? 2 : 0) : (dotpos < 0 ? 1 : 0)));
-	char *res = malloc(sizeof(char) * (size + 1));
-
+	src = len - 1, dest = size - 1;
+	res = malloc(sizeof(char) * (size + 1));
 	if (!res)
 		return (NULL);
-	src = len - 1;
-	dest = size - 1;
 	if (n_pos <= 0)
 	{
 		res[0] = '0';
@@ -51,7 +51,7 @@ char *divide_by_10exp_n(char *num, unsigned short n, char free_num)
 }
 
 /**
- * compute_npower_of_two - A function that compute the result for 2 raise to a given power
+ * compute_npower_of_two - Function that compute 2 raise to a given power
  * @n: The given exponential of 2
  *
  * Return: The value of 2 to power of n.
@@ -73,12 +73,12 @@ char *compute_npower_of_two(short n)
 			base = malloc(sizeof(char) * 2);
 			if (!base)
 			{
-				free (res);
+				free(res);
 				return (NULL);
 			}
 			base[0] = '2';
 			base[1] = '\0';
-			mem = mul_int(base, res, TRUE);
+			mem = multiply_int(base, res, TRUE);
 		}
 		free(res);
 		res = mem;
@@ -123,7 +123,7 @@ char *compute_npower_of_five(unsigned short n)
 		}
 		base[0] = '5';
 		base[1] = '\0';
-		tmp = mul_int(base, res, TRUE);
+		tmp = multiply_int(base, res, TRUE);
 		if (!tmp)
 		{
 			free(res);
@@ -138,7 +138,7 @@ char *compute_npower_of_five(unsigned short n)
 }
 
 /**
- * pos_num_powerof_two -  A function that compute 2 raise to the power of postive no.
+ * pos_num_powerof_two -  Function that compute 2 raise to power of +ve no.
  * @n: The given positive number
  *
  * Return: The value of 2 raise to power of positive number.
@@ -149,8 +149,8 @@ unsigned int pos_num_powerof_two(unsigned int n)
 }
 
 /**
- * unsigned_long_to_hex - A function that converts an unsigned long integer to its
- * string representation.
+ * unsigned_long_to_hex - A function that converts an unsigned long integer
+ * to its string representation.
  * @num: The given unsigned long integer
  * @upper: A flag that signifies that the hexadecimal should be in uppercase.
  *
@@ -158,7 +158,7 @@ unsigned int pos_num_powerof_two(unsigned int n)
  */
 char *unsigned_long_to_hex(unsigned long num, char upper)
 {
-	int count;
+	int count = 0;
 	char *str;
 	char size = sizeof(unsigned long) * 2 + 1;
 	unsigned long mem = num;

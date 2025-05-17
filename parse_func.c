@@ -10,7 +10,7 @@
 int set_number(const char *str, int *num)
 {
 	char dgt[11] = {0};
-	int n, m;
+	int n, m = 0;
 
 	for (n = 0; str[n] != '\0'; n++)
 	{
@@ -54,7 +54,7 @@ int set_flags(const char *str, fmat_spec_def *fmat_spec)
 	{
 		fmat_spec->space = str[n] == ' ' ? TRUE : fmat_spec->space;
 		fmat_spec->left = str[n] == '-' || fmat_spec->left ? TRUE : FALSE;
-		fmat_spec->show_sign = str[n] == '+' || fmat_spec->show_sign ? TRUE : FALSE;
+		fmat_spec->pos_sign = str[n] == '+' || fmat_spec->pos_sign ? TRUE : FALSE;
 		fmat_spec->group = str[n] == '\'' || fmat_spec->group ? TRUE : FALSE;
 		fmat_spec->alt = str[n] == '#' || fmat_spec->alt ? TRUE : FALSE;
 		fmat_spec->pad = str[n] == '0' ? '0' : fmat_spec->pad;
@@ -77,11 +77,11 @@ void set_precision(const char *str, va_list list, fmat_spec_def *fmat_spec,
 	fmat_spec->is_precision_set = TRUE;
 	if (str[*n] == '*')
 	{
-		fmat_spec_def->precision = va_list(list, int);
+		fmat_spec->precision = va_arg(list, int);
 		(*n)++;
 	}
-	else if (is_digit(str[n]))
-		*n += set_number(str[*n], &(fmat_spec_def->precision));
+	else if (is_digit(str[*n]))
+		*n += set_number(str + *n, &(fmat_spec->precision));
 	else if (is_specifier(str[*n]))
 		fmat_spec->precision = 0;
 	else
@@ -101,35 +101,33 @@ void set_precision(const char *str, va_list list, fmat_spec_def *fmat_spec,
 int read_format(const char *str, va_list list, fmat_spec_def *fmat_spec,
 		int *last_tokn)
 {
+	int count = 0, order = 0, error = 0;
+
 	if (!str || !fmat_spec || !last_tokn)
 		return (-1);
-
-	int count = 0, order = 0, error = 0;
-	char ch = str[count];
-
 	init_format_data(fmat_spec);
 	while (str[count] != '\0' && !fmat_spec->specifier && !error)
 	{
-		if (is_flag(ch) && order < 1)
-			count += set_flags(ch, fmat_spec), order = 1;
-		else if ((is_digit(ch) || ch == '*') && order < 2)
+		if (is_flag(*(str + count)) && order < 1)
+			count += set_flags(str + count, fmat_spec), order = 1;
+		else if ((is_digit(*(str + count)) || *(str + count) == '*') && order < 2)
 		{
-			if (ch == '*')
+			if (*(str + count) == '*')
 				fmat_spec->width = va_arg(list, int), count++;
 			else
-				count += set_number(ch, &fmat_spec->width);
+				count += set_number(str +count, &fmat_spec->width);
 			fmat_spec->is_width_set = TRUE, order = 2;
 		}
-		else if (ch == '.' && order < 3)
+		else if (*(str + count) == '.' && order < 3)
 		{
 			count++;
 			set_precision(str, list, fmat_spec, &count, &error), order = 3;
 		}
-		else if (is_length(ch) && order < 4)
-			set_length(ch, &count, fmat_spec), order = 4;
-		else if (is_specifier(ch) && order < 5)
+		else if (is_length(*(str + count)) && order < 4)
+			set_length(*(str + count), &count, fmat_spec), order = 4;
+		else if (is_specifier(*(str + count)) && order < 5)
 		{
-			fmat_spec->specifier = ch, count++, order = 5;
+			fmat_spec->specifier = *(str +count), count++, order = 5;
 			break;
 		}
 		else

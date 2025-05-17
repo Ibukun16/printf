@@ -1,16 +1,16 @@
 #include "main.h"
 /**
- * multiply_by_multiple_of_10 - A function that computethe product
+ * multiply_by_multiple_of_10 - A function that compute the product
  * of two numbers with one being a multiple of 10.
  * @num1: The first number to multiply.
  * @num_10: The number that is a multiple of 10.
  *
  * Return: A pointer to the result, else program fails.
  */
-char *multiply_by_multiple_of_10(const char *num1, const char *num_10)
+char *multiply_by_multiple_of_10(char *num1, char *num_10)
 {
 	int len1 = str_len(num1), len_10 = str_len(num_10);
-	int size = len1 + len_10, count, carry = 0, zeros = 0, prod;
+	int size = len1 + len_10, count, carry = 0, prod;
 	char *res;
 
 	if (!num1 || !num_10)
@@ -55,14 +55,13 @@ char *multiply_by_multiple_of_10(const char *num1, const char *num_10)
  *
  * Return: The product of the two numbers, else NULL.
  */
-char *multiply_int(char *n1, char *n2, char free_mem)
+char *multiply_int(char *n1, char *n2, bool free_mem)
 {
-	if (!n1 || !n2)
-		return (NULL);
-
 	char *res, *prod, *tmp_mem;
 	int count, len2 = str_len(n2), len1 = str_len(n1), size = len1 + len2;
 
+	if (!n1 || !n2)
+		return (NULL);
 	res = malloc(sizeof(char) * (size + 1));
 	if (!res)
 		return (NULL);
@@ -70,13 +69,13 @@ char *multiply_int(char *n1, char *n2, char free_mem)
 	res[size--] = '\0';
 	for (count = len2 - 1; count >= 0; count--)
 	{
-		prod = multiply_by_multiple_of_10(n1, n2[count]);
+		prod = multiply_by_multiple_of_10(n1, n2 + count);
 		if (!prod)
 		{
 			free(res);
 			return (NULL);
 		}
-		tmp_mem = add_positive_int(res, prod, TRUE);
+		tmp_mem = add_positive_nums(res, prod, TRUE);
 		free(prod);
 		if (!tmp_mem)
 		{
@@ -87,7 +86,7 @@ char *multiply_int(char *n1, char *n2, char free_mem)
 	}
 	free(tmp_mem);
 	while (*res == '0' && *(res + 1) != '\0')
-		left_shift(res, size);
+		shift_left(res, size);
 	if (free_mem)
 	{
 		free(n1);
@@ -104,11 +103,8 @@ char *multiply_int(char *n1, char *n2, char free_mem)
  *
  * Return: The product of the two floats, else NULL.
  */
-char *multiply_float(char *num1, char *num2, char free_mem)
+char *multiply_float(char *num1, char *num2, bool free_mem)
 {
-	if (!num1 || !num2)
-		return (NULL);
-
 	int dot1 = index_of_char(num1, '.'), dot2 = index_of_char(num2, '.');
 	int declen1 = (dot1 == -1) ? 0 : str_len(num1) - (dot1 + 1);
 	int declen2 = (dot2 == -1) ? 0 : str_len(num2) - (dot2 + 1);
@@ -116,6 +112,8 @@ char *multiply_float(char *num1, char *num2, char free_mem)
 	char *n1 = delete_char(num1, '.', FALSE), *res;
 	char *n2 = delete_char(num2, '.', FALSE);
 
+	if (!num1 || !num2)
+		return (NULL);
 	if (!n1 || !n2)
 	{
 		free(n1);
@@ -156,7 +154,7 @@ char *multiply_float(char *num1, char *num2, char free_mem)
  *
  * Return: The sum of the two integers, else NULL.
  */
-char *add_positive_nums(char *n1, char *n2, char free_mem)
+char *add_positive_nums(char *n1, char *n2, bool free_mem)
 {
 	int count, dgt1, dgt2, size, sum, len1, len2, carry = 0;
 	char *res;
@@ -206,11 +204,8 @@ char *add_positive_nums(char *n1, char *n2, char free_mem)
  *
  * Return: The sum of the two floats, else NULL.
  */
-char *add_positive_float_nums(char *n1, char *n2, bool free_mem)
+char *add_positive_float_nums(char *n1, char *n2, int free_mem)
 {
-	if (!n1 || !n2)
-		return (NULL);
-
 	int len1 = str_len(n1), len2 = str_len(n2), sum, count, size, carry = 0;
 	int dot1 = index_of_char(n1, '.'), dot2 = index_of_char(n2, '.');
 	char *res;
@@ -219,6 +214,8 @@ char *add_positive_float_nums(char *n1, char *n2, bool free_mem)
 	int max_declen = MAX(declen1, declen2);
 	int intlen = MAX(dot1 >= 0 ? dot1 : len1, dot2 >= 0 ? dot2 : len2);
 
+	if (!n1 || !n2)
+		return (NULL);
 	size = intlen + max_declen + (max_declen ? 1 : 0);
 	res = malloc(sizeof(char) * (size + 1));
 	if (!res)

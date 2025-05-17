@@ -26,12 +26,15 @@ int str_len(char *str)
  *
  * Return: void.
  */
-char mem_set(char *str, char c, unsigned int n)
+char *mem_set(char *str, char c, unsigned int n)
 {
 	unsigned int count;
 
+	if (!str)
+		return (NULL);
 	for (count = 0; str && count < n; count++)
-		*(str + count) = c;
+		str[count] = c;
+
 	return (str);
 }
 
@@ -44,11 +47,18 @@ char mem_set(char *str, char c, unsigned int n)
  */
 void shift_left(char *str, int n)
 {
-	int n;
+	int c, len = str_len(str);
 
-	for (n = 1; n <= n; n++)
-		str[n - 1] = str[n] != '\0' && str[n - 1] != '\0' ? str[n] : '\0';
+	if (!str || n <= 0)
+		return;
+	if (n >= len)
+	{
+		str[0] = '\0';
+		return;
+	}
 
+	for (c = 1; c <= len - n; c++)
+		str[c] = str[c + n];
 }
 
 /**

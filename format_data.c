@@ -26,7 +26,7 @@ void init_format_data(fmat_spec_def *specifier)
 	specifier->alt = FALSE;
 	specifier->space = FALSE;
 	specifier->left = FALSE;
-	specifier->show_sign = FALSE;
+	specifier->pos_sign = FALSE;
 	specifier->group = FALSE;
 
 	specifier->pad = ' ';
@@ -55,7 +55,7 @@ fmat_spec_def *create_new_format()
  *
  * Return: The pointer to the newly created struct, else NULL.
  */
-float_typ *create_new_float(u_short_typ exp_size, u_short_typ mantissa_size)
+float_typ *create_new_float(u_short_typ exp_size, u_short_typ mant_size)
 {
 	float_typ *float_data;
 
@@ -65,7 +65,7 @@ float_typ *create_new_float(u_short_typ exp_size, u_short_typ mantissa_size)
 	float_data->exp = malloc(sizeof(char) * (exp_size + 1));
 	if (float_data->exp == NULL)
 		free(float_data);
-	float_data->mantissa = malloc(sizeof(char) * (mantissa_size + 1));
+	float_data->mantissa = malloc(sizeof(char) * (mant_size + 1));
 	if (float_data->mantissa == NULL)
 	{
 		free(float_data->exp);
@@ -77,16 +77,16 @@ float_typ *create_new_float(u_short_typ exp_size, u_short_typ mantissa_size)
 /**
  * free_float_data - A function that freed the memory allocated to
  * a given pointer.
- * @float_data: Pointer to the memory space to free.
+ * @flot_data: Pointer to the memory space to free.
  */
-void free_float_data(float_typ *float_data)
+void free_float_data(float_typ *flot_data)
 {
-	if (float_data != NULL)
+	if (flot_data != NULL)
 	{
-		if (float_data->exp)
-			free(float_data->exp);
-		if (float_data->mantissa)
-			free(float_data->mantissa);
-		free(float_data);
+		if (flot_data->exp)
+			free(flot_data->exp);
+		if (flot_data->mantissa)
+			free(flot_data->mantissa);
+		free(flot_data);
 	}
-
+}

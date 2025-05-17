@@ -9,27 +9,26 @@
  */
 char *round_float_to_int(char *num, bool free_mem)
 {
-	if (!num)
-		return (NULL);
-
 	int decpos = index_of_char(num, '.'), len = str_len(num);
 	int declen = len - (decpos + 1), decp_len;
 	char *res = NULL, *dec_part = NULL, *int_part = NULL, *round = NULL;
 
+	if (!num)
+		return (NULL);
 	if (decpos == -1)
 	{
-		res = strn_copy(res, num);
+		res = strn_copy(res, num, 0);
 		if (free_mem)
 			free(num);
 		return (res);
 	}
-	dec_part = strn_copy(dec_part, num + decpos + 1);
+	dec_part = strn_copy(dec_part, num + decpos + 1, 0);
 	round = round_up(dec_part, 0, TRUE);
 	decp_len = str_len(round);
 	if (round[0] > '5' || (round[0] == '1' && decp_len > declen))
 	{
 		int_part = strn_copy(int_part, num, decpos);
-		res = add_positive_nums(int_part, '1', TRUE);
+		res = add_positive_nums(int_part, "1", TRUE);
 	}
 	free(round);
 	if (free_mem)
@@ -42,6 +41,7 @@ char *round_float_to_int(char *num, bool free_mem)
  * precision.
  * @num: The number to round.
  * @prec: The given precision to round number.
+ * @free_mem: A flag that indicates free memory
  *
  * Return: The rounded float, else NULL.
  */
@@ -52,7 +52,7 @@ char *round_float(char *num, unsigned int prec)
 	char *res = NULL, *dec_part = NULL, *int_part = NULL, *round = NULL;
 
 	if (prec == 0)
-		return (round_float_to_int(num));
+		return (round_float_to_int(num, TRUE));
 	if (prec == declen)
 		return (strn_copy(res, num, len));
 	res = malloc(sizeof(char) * (size + 1));
@@ -74,7 +74,7 @@ char *round_float(char *num, unsigned int prec)
 		if (decp_len > declen && round[0] == '1')
 		{
 			free(res);
-			res = add_positive_nums(int_part, '1', TRUE);
+			res = add_positive_nums(int_part, "1", TRUE);
 		}
 		else if (decp_len <= declen)
 		{
@@ -99,11 +99,10 @@ char *round_float(char *num, unsigned int prec)
  */
 char *strn_copy(char *dest, char *src, int n)
 {
-	if (!src)
-		return (NULL);
-
 	int count, len = str_len(src);
 
+	if (!src)
+		return (NULL);
 	if (n <= 0 || n > len)
 		n = len;
 	if (!dest)
@@ -131,6 +130,7 @@ char *round_up(char *num, unsigned int prec, bool free_mem)
 {
 	unsigned int len = str_len(num), i, limit = prec ? prec : 0, carry = 0;
 	char *mem = NULL;
+	int n;
 
 	mem = malloc(sizeof(char) * (len + 2));
 	strn_copy(mem + 1, num, len + 1), mem[0] = '0';
@@ -153,7 +153,7 @@ char *round_up(char *num, unsigned int prec, bool free_mem)
 	}
 	if (carry == 1)
 	{
-		for (int i = (int)limit - 1; i >= 0; i--)
+		for (n = (int)limit - 1; n >= 0; n--)
 		{
 			if (mem[i] < '9')
 			{
@@ -161,7 +161,7 @@ char *round_up(char *num, unsigned int prec, bool free_mem)
 				carry = 0;
 				break;
 			}
-			mem[i] = '0';
+			mem[n] = '0';
 		}
 	}
 	trim_start(mem, '0', TRUE);

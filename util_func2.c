@@ -10,14 +10,13 @@
  */
 char *sub_str(char *str, int n, bool free_str)
 {
-	if !(str)
-		return (NULL);
-
 	char *copied;
 	int len = str_len(str);
 	int start = (n < 0) ? len + n : n;
 	int size = len - start, m;
 
+	if (!str)
+		return (NULL);
 	if (start < 0 || start > len)
 		return (NULL);
 	copied = malloc(sizeof(char) * (size + 1));
@@ -42,15 +41,19 @@ char *sub_str(char *str, int n, bool free_str)
  */
 char *trim_start(char *str, char ch, bool free_str)
 {
-	if (!str)
-		return (NULL);
-
+	int len;
 	char *new_str, *start = str;
 
+	 if (!str)
+		 return (NULL);
 	while (*start == ch)
 		start++;
 
-	new_str = strn_copy(*new_str, *start, 0);
+	len = str_len(start);
+	new_str = malloc(sizeof(char) * (len + 1));
+	if (!new_str)
+		return (NULL);
+	strn_copy(new_str, start, 0);
 	if (free_str)
 		free(str);
 	return (new_str);
@@ -67,12 +70,11 @@ char *trim_start(char *str, char ch, bool free_str)
  */
 char *trim_end(char *str, char ch, bool free_str)
 {
-	if (!str)
-		return (NULL);
-
 	char *new_str, *copy = str;
 	int n = 0, m;
 
+	if (!str)
+		return (NULL);
 	while (*copy != ch && *copy != '\0')
 	{
 		n++;

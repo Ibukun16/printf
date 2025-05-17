@@ -19,10 +19,10 @@ void set_dec_fmat(va_list *list, fmat_spec_def *fmat_spec)
 		num = (short)va_arg(*list, long);
 	else
 		num = va_arg(*list, int);
-	str = conv_longto_str(num);
+	str = convert_long_to_str(num);
 	if (str)
 	{
-		sign = (num >= 0 && (fmat_spec->show_sign || fmat_spec->space)) ? 1 : 0;
+		sign = (num >= 0 && (fmat_spec->pos_sign || fmat_spec->space)) ? 1 : 0;
 		if (fmat_spec->is_precision_set && !fmat_spec->precision && !num)
 			print_ntimes(' ', fmat_spec->width);
 		else
@@ -41,7 +41,7 @@ void set_dec_fmat(va_list *list, fmat_spec_def *fmat_spec)
 					put_charto_buf(' ');
 			if (num < 0 || sign)
 				put_charto_buf(num < 0 ? '-' : (
-						fmat_spec->space && !fmat_spec->show_sign ? ' ' : '+'));
+						fmat_spec->space && !fmat_spec->pos_sign ? ' ' : '+'));
 			put_numto_buf(zeros, num, str);
 			if (fmat_spec->left)
 				for (count = 0; count < padding; count++)
@@ -59,19 +59,19 @@ void set_dec_fmat(va_list *list, fmat_spec_def *fmat_spec)
  *
  * Return: void.
  */
-void set_hexadec_format(va_list *list, fmat_spec_def *fmat_spec)
+void set_hexadec_fmat(va_list *list, fmat_spec_def *fmat_spec)
 {
 	int count, padding, zeros, width_max, len, p_max;
 	unsigned long num;
 	char *s;
 
-	if (fmat_spec->short)
+	if (fmat_spec->is_short)
 		num = (va_arg(*list, unsigned long) << 2 * 8) >> 2 * 8;
 	else if (fmat_spec->is_long)
 		num = va_arg(*list, unsigned long);
 	else
 		num = va_arg(*list, unsigned int);
-	s = conv_unsignedlong_to_hex(num, fmat_spec->specifier == 'X');
+	s = unsigned_long_to_hex(num, fmat_spec->specifier == 'X');
 	if (s)
 	{
 		if (fmat_spec->is_precision_set && !fmat_spec->precision && !num)
@@ -107,11 +107,12 @@ void set_hexadec_format(va_list *list, fmat_spec_def *fmat_spec)
  *
  * Return: void.
  */
-void set_octadec_format(va_list *list, fmat_spec_def *fmat_spec)
+void set_octadec_fmat(va_list *list, fmat_spec_def *fmat_spec)
 {
-	int count = 0, zeros = 0, len = 0, padding = 0, width_max, p_max;
 	unsigned long num;
 	char *s;
+	 int count = 0, zeros = 0, len = 0, padding = 0;
+	 int num_len = 0, width_max = 0, p_max = 0;
 
 	if (fmat_spec->is_long)
 		num = va_arg(*list, unsigned long);
@@ -119,9 +120,10 @@ void set_octadec_format(va_list *list, fmat_spec_def *fmat_spec)
 		num = (va_arg(*list, unsigned long) << 2 * 8) >> 2 * 8;
 	else
 		num = va_arg(*list, unsigned int);
-	s = conv_longto_oct(num);
+	s = convert_long_to_oct(num);
 	if (s)
 	{
+		num_len = str_len(s);
 		if (fmat_spec->is_precision_set && !fmat_spec->precision && !num)
 			print_ntimes(' ', fmat_spec->width);
 		else
@@ -155,7 +157,7 @@ void set_octadec_format(va_list *list, fmat_spec_def *fmat_spec)
  *
  * Return: void.
  */
-void set_unsigned_int_format(va_list *list, fmat_spec_def *fmat_spec)
+void set_unsigned_int_fmat(va_list *list, fmat_spec_def *fmat_spec)
 {
 	int count, padding = 0, zeros = 0, len;
 	unsigned long num, width_max, p_max;
@@ -167,10 +169,10 @@ void set_unsigned_int_format(va_list *list, fmat_spec_def *fmat_spec)
 		num = (va_arg(*list, unsigned int) << 2 * 8) >> 2 * 8;
 	else
 		num = va_arg(*list, unsigned int);
-	s = conv_unsignedlong_to_str(num);
+	s = convert_u_long_to_str(num, 0);
 	if (s)
 	{
-		if (FMT_PREC_EMPTY(fmat_spec) && !num)
+		if (FMT_PREC_EMPTY(fmat_spec) && num == 0)
 			print_ntimes(' ', fmat_spec->width);
 		else
 		{
