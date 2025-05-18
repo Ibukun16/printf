@@ -147,7 +147,7 @@ typedef struct float_data float_typ;
 
 
 int _printf(const char *format, ...);
-int print_buf(char c, char flag);
+int to_buf(char c, char flag);
 int put_charto_buf(char c);
 int putstr_to_buf(char *str);
 void set_format(va_list *args, fmat_spec_def *format_det);

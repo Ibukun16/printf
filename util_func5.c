@@ -24,7 +24,7 @@ char *ptr_to_str(void *ptr)
 	hex_part = malloc(sizeof(char) * (size + 1));
 	if (!hex_part)
 		return (NULL);
-	mem_set(hex_part, size, '0');
+	mem_set(hex_part, '0', size);
 	do {
 		dgt = tmp % 16;
 		hex_part[n] = dgt < 10 ? dgt + '0' : dgt - 10 + 'a';

@@ -55,7 +55,7 @@ char *mantissa_to_dec_frac(char *mantis, unsigned short frac_len)
 	res = malloc(sizeof(char) * (frac_len + 3));
 	if (!res)
 		return (NULL);
-	mem_set(res, frac_len + 2, '0');
+	mem_set(res, '0', frac_len + 2);
 	res[1] = '.';
 	res[frac_len + 2] = '\0';
 
