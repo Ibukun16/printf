@@ -99,10 +99,11 @@ char *round_float(char *num, unsigned int prec)
  */
 char *strn_copy(char *dest, char *src, int n)
 {
-	int count, len = str_len(src);
+	int count, len;
 
 	if (!src)
 		return (NULL);
+	len = str_len(src);
 	if (n <= 0 || n > len)
 		n = len;
 	if (!dest)

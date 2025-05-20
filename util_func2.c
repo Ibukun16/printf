@@ -48,6 +48,8 @@ char *trim_start(char *str, char ch, bool free_str)
 		 return (NULL);
 	while (*start == ch)
 		start++;
+	if (start == str && !free_str)
+		return (str);
 
 	len = str_len(start);
 	new_str = malloc(sizeof(char) * (len + 1));

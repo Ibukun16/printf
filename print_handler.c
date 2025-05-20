@@ -10,7 +10,8 @@
 void set_percent_fmat(va_list *args, fmat_spec_def *fmat_spec)
 {
 	(void)args;
-	put_charto_buf(fmat_spec->specifier);
+	(void) fmat_spec;
+	put_charto_buf('%');
 }
 
 /**
@@ -24,29 +25,37 @@ void set_pointer_fmat(va_list *args, fmat_spec_def *fmat_spec)
 {
         int count, len, padding;
 	void *ptr = va_arg(*args, void *);
-	char *str = ptr_to_str(ptr);
+	char *str;
 
-	if (str)
+	if (!ptr)
 	{
-		len = str_len(str);
-		padding = MAX(len, fmat_spec->width) - len;
-		if (!fmat_spec->left)
-		{
-			for (count = 0; count < padding; count++)
-				put_charto_buf(' ');
-		}
-
-		for (count = 0; str[count] != '\0'; count++)
-			put_charto_buf(str[count]);
-		if (fmat_spec->left)
-		{
-			for (count = 0; count < padding; count++)
-				put_charto_buf(' ');
-		}
-		free(str);
-	}
-	else
 		putstr_to_buf("(nil)");
+		return;
+	}
+
+	str = ptr_to_str(ptr);
+	if (!str)
+	{
+		putstr_to_buf("(bull)");
+		return;
+	}
+
+	len = str_len(str);
+	padding = MAX(len, fmat_spec->width) - len;
+	if (!fmat_spec->left)
+	{
+		for (count = 0; count < padding; count++)
+			put_charto_buf(' ');
+	}
+
+	putstr_to_buf(str);
+
+	if (fmat_spec->left)
+	{
+		for (count = 0; count < padding; count++)
+			put_charto_buf(' ');
+	}
+	free(str);
 }
 
 /**

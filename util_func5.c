@@ -9,37 +9,37 @@
 char *ptr_to_str(void *ptr)
 {
 	char *res, *hex_part, *prefix = "0x";
-	int dgt, n = 0, size;
+	int dgt, i = 0, size;
 	uintptr_t tmp;
 
 	if (!ptr)
 	{
-		res = malloc(sizeof("(nil)"));
+		res = malloc(6);
 		if (!res)
 			return (NULL);
 		return (strn_copy(res, "(nil)", 0));
 	}
 	tmp = (uintptr_t)ptr;
-	size = sizeof(uintptr_t) * 2;
+	size = 2 * sizeof(uintptr_t);
 	hex_part = malloc(sizeof(char) * (size + 1));
 	if (!hex_part)
 		return (NULL);
-	mem_set(hex_part, '0', size);
 	do {
 		dgt = tmp % 16;
-		hex_part[n] = dgt < 10 ? dgt + '0' : dgt - 10 + 'a';
+		hex_part[i++] = (dgt < 10) ? (dgt + '0') : (dgt - 10 + 'a');
 		tmp /= 16;
-	} while (tmp > 0);
-	hex_part[n] = '\0';
+	} while (tmp > 0 && i < size - 1);
+	hex_part[i] = '\0';
 	rev_string(hex_part);
-	res = malloc(sizeof(char) * (str_len(prefix) + str_len(hex_part) + 1));
+	res = malloc(sizeof(char) * ((str_len(prefix) + str_len(hex_part) + 1)));
 	if (!res)
 	{
 		free(hex_part);
 		return (NULL);
 	}
 	strn_copy(res, prefix, 0);
-	str_cat(res, hex_part, TRUE);
+	str_cat(res, hex_part, FALSE);
+	free(hex_part);
 	return (res);
 }
 

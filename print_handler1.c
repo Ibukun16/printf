@@ -1,13 +1,13 @@
 #include "main.h"
 
 /**
- * set_dec_fmat - a function that set the format for printing signed int.
+ * set_int_fmat - a function that set the format for printing signed int.
  * @list: The list of arguments to be printed.
  * @fmat_spec: The format specifier details.
  *
  * Return: void.
  */
-void set_dec_fmat(va_list *list, fmat_spec_def *fmat_spec)
+void set_int_fmat(va_list *list, fmat_spec_def *fmat_spec)
 {
 	int count, padding = 0, zeros = 0, len;
 	long num;
@@ -66,7 +66,7 @@ void set_hexadec_fmat(va_list *list, fmat_spec_def *fmat_spec)
 	char *s;
 
 	if (fmat_spec->is_short)
-		num = (va_arg(*list, unsigned long) << 2 * 8) >> 2 * 8;
+		num = (short)(va_arg(*list, unsigned long) << 2 * 8) >> 2 * 8;
 	else if (fmat_spec->is_long)
 		num = va_arg(*list, unsigned long);
 	else
@@ -164,7 +164,7 @@ void set_unsigned_int_fmat(va_list *list, fmat_spec_def *fmat_spec)
 	if (fmat_spec->is_long)
 		num = va_arg(*list, unsigned long);
 	else if (fmat_spec->is_short)
-		num = (short)va_arg(*list, unsigned int) << 2 * 8) >> 2 * 8;
+		num = (short)(va_arg(*list, unsigned int) << 2 * 8) >> 2 * 8;
 	else
 		num = va_arg(*list, unsigned int);
 	s = convert_u_long_to_str(num, 0);

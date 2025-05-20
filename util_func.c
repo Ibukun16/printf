@@ -86,16 +86,18 @@ int index_of_char(char *str, char c)
  */
 void rev_string(char *str)
 {
-	int c, len = 0;
+	int i, len = 0;
 	char tmp;
 
-	while (str[len] != '\0')
-		len++;
+	if (!str)
+		return;
 
-	for (c = 0; c < len / 2; c++)
+	len = str_len(str);
+
+	for (i = 0; i < len / 2; i++)
 	{
-		tmp = str[len - c - 1];
-		str[len - c - 1] = str[c];
-		str[c] = tmp;
+		tmp = str[len - i - 1];
+		str[len - i - 1] = str[i];
+		str[i] = tmp;
 	}
 }

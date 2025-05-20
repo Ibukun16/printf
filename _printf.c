@@ -56,34 +56,34 @@ int to_buf(char c, char flag)
 	static int idx;
 	static char buffer[1024];
 	static int char_count;
-	static char out;
+	static char written_bytes;
 
-	if (flag == 0 && idx < (int)sizeof(buffer))
-	{
-		buffer[idx++] = c;
-		char_count++;
-	}
-
-	if (flag == 1 || idx >= (int)sizeof(buffer))
-	{
-		if (idx > 0)
-		{
-			out = write(1, buffer, idx);
-			fflush(stdout);
-			idx = 0;
-			mem_set(buffer, 0, sizeof(buffer));
-		}
-	}
 	if (flag == -1)
 	{
 		idx = 0;
 		char_count = 0;
-		mem_set(buffer, 0, sizeof(buffer));
+		mem_set(buffer, 0, 1024);
 	}
-
+	
 	if (flag == -2)
 		return (char_count);
-	return (out);
+
+	if(idx < (int)sizeof(buffer) && flag == 0)
+	{
+		written_bytes = char_count < 1 ? 1 : written_bytes;
+		buffer[idx] = c;
+		idx++;
+		char_count++;
+	}
+
+	if (idx >= (int)sizeof(buffer) || flag == 1)
+	{
+		written_bytes = write(1, buffer, idx);
+		fflush(stdout);
+		idx = 0;
+		mem_set(buffer, 0, 1024);
+	}
+	return (written_bytes);
 }
 
 /**
@@ -129,15 +129,15 @@ int putstr_to_buf(char *str)
  */
 void set_format(va_list *args, fmat_spec_def *format_det)
 {
-	int n;
+	int handled = 0, n, num_spec;
 
 	set_specifier specifier_type[] = {
 		{'%', set_percent_fmat},
 		{'p', set_pointer_fmat},
 		{'c', set_char_fmat},
 		{'s', set_string_fmat},
-		{'d', set_dec_fmat},
-		{'i', set_dec_fmat},
+		{'d', set_int_fmat},
+		{'i', set_int_fmat},
 		{'X', set_hexadec_fmat},
 		{'x', set_hexadec_fmat},
 		{'o', set_octadec_fmat},
@@ -151,10 +151,17 @@ void set_format(va_list *args, fmat_spec_def *format_det)
 		{'F', set_double_fmat},
 		{'f', set_double_fmat},
 	};
-	for (n = 0; n < 23 && specifier_type[n].specifier != '\0'; n++)
+	num_spec = sizeof(specifier_type) / sizeof(specifier_type[0]);
+	for (n = 0; n < num_spec; n++)
 		if (format_det->specifier == specifier_type[n].specifier)
 		{
 			specifier_type[n].print(args, format_det);
+			handled = 1;
 			break;
 		}
+	if (!handled)
+	{
+		put_charto_buf('%');
+		put_charto_buf(format_det->specifier);
+	}
 }

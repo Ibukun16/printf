@@ -77,7 +77,6 @@ struct format_spec
 	char is_short;
 	char is_long_double;
 	char is_long;
-	char is_long_long;
 	char is_precision_set;
 	char is_width_set;
 	char alt;
@@ -188,7 +187,7 @@ void set_pointer_fmat(va_list *args, fmat_spec_def *fmat_spec);
 void set_percent_fmat(va_list *args, fmat_spec_def *fmat_spec);
 
 /*** Functions that set format to print2 ***/
-void set_dec_fmat(va_list *list, fmat_spec_def *fmat_spec);
+void set_int_fmat(va_list *list, fmat_spec_def *fmat_spec);
 void set_hexadec_fmat(va_list *list, fmat_spec_def *fmat_spec);
 void set_octadec_fmat(va_list *list, fmat_spec_def *fmat_spec);
 void set_unsigned_int_fmat(va_list *list, fmat_spec_def *fmat_spec);
@@ -213,6 +212,7 @@ int get_size(const char *fmt, int *s);
 int str_len(char *str);
 void rev_string(char *str);
 char *ptr_to_str(void *ptr);
+int flush_buffer(void);
 void shift_left(char *str, int n);
 int count_char(char *scr, char ch);
 char *convert_long_to_str(long num);
@@ -220,7 +220,7 @@ int index_of_char(char *str, char c);
 char *is_invalid(float_typ *flot_data);
 char *sub_str(char *str, int n, bool free);
 char *convert_u_long_to_str(unsigned long num, int neg);
-char *str_cat(char *main, char *sec, bool free);
+char *str_cat(char *main, char *sec, bool free_input);
 char *mem_set(char *str, char c, unsigned int n);
 char *delete_char(char *str, char ch, bool free);
 char *trim_end(char *str, char ch, bool free_str);

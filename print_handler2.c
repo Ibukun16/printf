@@ -132,12 +132,13 @@ void set_rot13_fmat(va_list *list, fmat_spec_def *fmat_spec)
 void set_revstr_fmat(va_list *list, fmat_spec_def *fmat_spec)
 {
 	int count, len, padding;
-	char *s = va_arg(*list, char *);
+	char *s = va_arg(*list, char *), pad_char;
 
 	if (!s)
 		return;
 	len = str_len(s);
 	padding = MAX(len, fmat_spec->width) - len;
+	pad_char = fmat_spec->pad ? fmat_spec->pad : ' ';
 	if (!fmat_spec->left)
 		for (count = 0; count < padding; count++)
 			put_charto_buf(fmat_spec->pad);
@@ -147,5 +148,5 @@ void set_revstr_fmat(va_list *list, fmat_spec_def *fmat_spec)
 
 	if (fmat_spec->left)
 		for (count = 0; count < padding; count++)
-			put_charto_buf(fmat_spec->pad);
+			put_charto_buf(pad_char);
 }

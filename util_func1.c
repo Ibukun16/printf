@@ -118,24 +118,29 @@ int count_char(char *src, char ch)
  *
  * Return: A pointer to the concatenated string
  */
-char *str_cat(char *main, char *sec, bool free_str)
+char *str_cat(char *main, char *sec, bool free_input)
 {
-	int len1 = str_len(main);
-	int len2 = str_len(sec);
+	int len1 = 0;
+	int len2 = 0;
 	int count;
 	char *new_str;
 
-	if (main == NULL && sec == NULL)
-		return (NULL);
+	if (main != NULL)
+		len1 = str_len(main);
+	if (sec != NULL)
+		len2 = str_len(sec);
+
 	new_str = malloc(sizeof(char) * (len1 + len2 + 1));
 	if (!new_str)
 		return (NULL);
-	for (count = 0; main[count] != '\0'; count++)
-		new_str[count] = main[count];
-	for (count = 0; sec[count] != '\0'; count++)
-		new_str[len1 + count] = sec[count];
+	if (main != NULL)
+		for (count = 0; main[count] != '\0'; count++)
+			new_str[count] = main[count];
+	if (sec != NULL)
+		for (count = 0; sec[count] != '\0'; count++)
+			new_str[len1 + count] = sec[count];
 	new_str[len1 + len2] = '\0';
-	if (free_str)
+	if (free_input)
 	{
 		free(main);
 		free(sec);
